@@ -261,7 +261,8 @@ if configMgr.readFromTree:
 
 
         # Topa
-        topFiles.append(INPUTDIR+ "/Top.root")
+        topFiles.append(INPUTDIR+ "/TopHTMET.root")
+#        topFiles.append(INPUTDIR+ "/Top.root")
         if not zlFitterConfig.usePreComputedTopGeneratorSys:
             topFiles.append(INPUTDIR + "TopMCatNLO.root")
         if not zlFitterConfig.usePreComputedTopFragmentationSys:
@@ -273,12 +274,14 @@ if configMgr.readFromTree:
 
 
         # W
-        wFiles.append(INPUTDIR+ "/WMassiveCB.root")
+        wFiles.append(INPUTDIR+ "/WSherpa221.root")
+#        wFiles.append(INPUTDIR+ "/WMassiveCB.root")
         if not zlFitterConfig.usePreComputedWGeneratorSys:
             wFiles.append(INPUTDIR+ "/WMadgraphPythia8.root")
 
         # Z
-        zFiles.append(INPUTDIR+ "/ZMassiveCB.root")
+        zFiles.append(INPUTDIR+ "/ZSherpa221.root")
+#        zFiles.append(INPUTDIR+ "/ZMassiveCB.root")
         # zFiles.append(INPUTDIR+ "/Zjets.root")
         if not zlFitterConfig.usePreComputedZGeneratorSys:
             zFiles.append(INPUTDIR+ "/ZMadgraphPythia8.root")
@@ -294,7 +297,8 @@ if configMgr.readFromTree:
     # dataFiles.append(INPUTDIR_DATA+ "/DataMain_data15_13TeV.root")
     # dataFiles.append(INPUTDIR_DATA+ "/DataMain_data16_13TeV.root")
 #    dataFiles.append(INPUTDIR_DATA+ "/DataMain.root")
-    dataFiles.append(INPUTDIR_DATA+ "/DataMain.root")
+#    dataFiles.append(INPUTDIR_DATA+ "/DataMain.root")
+    dataFiles.append(INPUTDIR_DATA+ "/DataMain_311481.root")
 
     log.info("Using the following inputs:")
     log.info("topFiles = %s" % topFiles)
