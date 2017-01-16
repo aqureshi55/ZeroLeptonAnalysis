@@ -514,8 +514,8 @@ anaSRJigsawSRSquarkCommon.eta12temp_max_loose       = 2.8
 
 anaSRJigsawSRS1Common                   = copy.deepcopy( anaSRJigsawSRSquarkCommon )
 anaSRJigsawSRS1Common.name              = "SRJigsawSRS1Common"
-anaSRJigsawSRS1Common.R_H2PP_H3PP       = 0.6
-anaSRJigsawSRS1Common.R_H2PP_H3PP_upper = 0.95
+anaSRJigsawSRS1Common.R_H2PP_H3PP       = 0.55
+anaSRJigsawSRS1Common.R_H2PP_H3PP_upper = 0.9
 #anaSRJigsawSRS1Common.RPZ_HT3PP_upper   = 0.50
 anaSRJigsawSRS1Common.R_pTj2_HT3PP      = 0.16
 anaSRJigsawSRS1Common.H2PP              = 800
@@ -596,7 +596,7 @@ anaSRJigsawSRS4Common = copy.deepcopy( anaSRJigsawSRSquarkCommon )
 anaSRJigsawSRS4Common.name = "SRJigsawSRS4Common"
 
 anaSRJigsawSRS4Common.R_pTj2_HT3PP      = 0.13
-anaSRJigsawSRS4Common.eta12temp_max       = 2.4 #new
+anaSRJigsawSRS4Common.eta12temp_max       = 2.8 #new
 anaSRJigsawSRS4Common.deltaQCD          = 0. #new
 anaSRJigsawSRS4Common.H2PP              = 1700 #1600
 anaSRJigsawSRS4Common.HT3PP_loose       = 1400
