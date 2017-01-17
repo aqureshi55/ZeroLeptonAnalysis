@@ -1,19 +1,4 @@
-#!/usr/local/bin/python
-"""
- * Project : HistFitter - A ROOT-based package for statistical data analysis      *
- * Package : HistFitter                                                           *
- * Script  : HistFitter.py                                                        *
- * Created : November 2012                                                        *
- *                                                                                *
- * Description:                                                                   *
- *              Top-level control script for all commands/run-conditions          *                                                                                *
- * Authors:                                                                       *
- *      HistFitter group                                                          *
- *                                                                                *
- * Redistribution and use in source and binary forms, with or without             *
- * modification, are permitted according to the terms listed in the file          *
- * LICENSE.                                                                       *
-"""
+#!/usr/bin/python
 
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
@@ -24,9 +9,9 @@ from ROOT import ConfigMgr
 gROOT.Reset()
 import os
 import argparse
-
 from logger import Logger
 log = Logger('HistFitter')
+print "working"
 
 def GenerateFitAndPlotCPP(fc, anaName, drawBeforeFit, drawAfterFit, drawCorrelationMatrix, drawSeparateComponents, drawLogLikelihood, minos, minosPars, doFixParameters, fixedPars, ReduceCorrMatrix, noFit):
     """ 

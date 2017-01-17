@@ -40,8 +40,27 @@ def MakeBox(color=ROOT.kGreen,offset=0,ymin=-1,ymax=1):
 
 
 def main():
+    print "FINAL CHANNELS", finalChannelsDict
+    for channel in sorted(finalChannelsDict.keys()):
+        if channel is ('SRJigsawSRG1Common'):
+            del finalChannelsDict[channel]
+        if channel is  'SRJigsawSRG2Common':
+            del finalChannelsDict[channel]
+        if channel is 'SRJigsawSRG3Common':
+            del finalChannelsDict[channel]
+        if channel is 'SRJigsawSRG4Common':
+            del finalChannelsDict[channel]
+    print "FINAL CHANNELS", finalChannelsDict
     ## Get list of mu parameters (present in all SRs)
     for channel in sorted(finalChannelsDict.keys()):
+        if channel is ('SRJigsawSRG1Common'):
+            continue
+        if channel is  'SRJigsawSRG2Common':
+            continue
+        if channel is 'SRJigsawSRG3Common':
+            continue
+        if channel is 'SRJigsawSRG4Common':
+            continue
         if not os.path.exists("MU_%s.pkl" % channel):
             continue
         
@@ -60,7 +79,7 @@ def main():
             #if not 'Yield' in item[0]: continue
             if not item[0] in dMU: dMU[item[0]] = {}
             dMU[item[0]][channel] = [item[1],item[2]]
-            #print item[0],channel,dMU[item[0]][channel],item
+            print item[0],channel,dMU[item[0]][channel],item
         fMU.close()
        
         try:
@@ -94,6 +113,16 @@ def main():
         dMU[mu]['histbis'].SetLineColor(ROOT.kRed)
         dMU[mu]['histbis'].SetLineWidth(1)
         for bin,channel in enumerate(sorted(finalChannelsDict)):
+            print "CHANNEL", channel
+            if channel is ('SRJigsawSRG1Common'):
+                continue
+            if channel is  'SRJigsawSRG2Common':
+                continue
+            if channel is 'SRJigsawSRG3Common':
+                continue
+            if channel is 'SRJigsawSRG4Common':
+                continue
+            print bin,mu,dMU[mu][channel][0]
             dMU[mu]['hist'].SetBinContent(bin+1,dMU[mu][channel][0])
             dMU[mu]['hist'].SetBinError(bin+1,dMU[mu][channel][1])
             dMU[mu]['hist'].GetXaxis().SetBinLabel(bin+1,channel[2:])
@@ -102,6 +131,14 @@ def main():
     
     ## Prepare NP histograms
     for ichan,channel in enumerate(sorted(finalChannelsDict.keys())):
+        if channel is ('SRJigsawSRG1Common'):
+            continue
+        if channel is  'SRJigsawSRG2Common':
+            continue
+        if channel is 'SRJigsawSRG3Common':
+            continue
+        if channel is 'SRJigsawSRG4Common':
+            continue
         hname = 'hNP_%s' % channel
         print hname
         hNP[hname] = ROOT.TH2F(hname,hname,len(dNP.keys()),0,len(dNP.keys()),14,-2.25,2.25)
@@ -152,18 +189,19 @@ if __name__ == "__main__":
         pad.SetBorderMode(0)
         pad.SetBorderSize(2)
         pad.SetTicks()
-        pad.SetTopMargin(0.)
-        pad.SetRightMargin(0.05)
+        pad.SetTopMargin(0.05)
+        pad.SetRightMargin(0.1)
         if ipad != len(dMU.keys()) - 1:
             pad.SetBottomMargin(0.)
         else:
-            pad.SetBottomMargin(0.15)
+            pad.SetBottomMargin(0.45)
         pad.SetLeftMargin(0.10)
         pad.SetFrameBorderMode(0)
         pad.SetFrameBorderMode(0)
         pad.Draw()
-    
     for imu,mu in enumerate(dMU.keys()):
+        print "Drawing", imu," ",mu
+
         pad = plots['MU']['pads'][imu]
         pad.cd()
 
@@ -172,7 +210,7 @@ if __name__ == "__main__":
 
         if not 'hist' in dMU[mu]:
             continue
-
+        print "Drawing"
         dMU[mu]['hist'].GetXaxis().SetLabelOffset(0.02)
         dMU[mu]['hist'].GetXaxis().SetLabelSize(0.2)
         dMU[mu]['hist'].GetYaxis().SetTitleOffset(0.25)

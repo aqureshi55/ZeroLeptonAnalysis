@@ -84,8 +84,8 @@ def latexfitresults(filename,regionList,sampleList,dataname='obsData',showSum=Fa
   pick up channel category (RooCategory) from workspace
   """
   regionCat = w.obj("channelCat")
-  if not blinded:
-    data_set.table(regionCat).Print("v")
+#  if not blinded:
+#    data_set.table(regionCat).Print("v")
 
   """
   find full (long) name list of regions (i.e. short=SR3J, long=SR3J_meffInc30_JVF25pt50)
@@ -138,6 +138,8 @@ def latexfitresults(filename,regionList,sampleList,dataname='obsData',showSum=Fa
     data.SetTitle("data_" + regionList[index])
     
   nobs_regionList = [ data.sumEntries() for data in regionDatasetList]
+  # blinding SR region, even if unblinded
+  nobs_regionList[-1] = -1
 
   """
   if showSum=True calculate the total number of observed events in all regions  
@@ -198,8 +200,8 @@ def latexfitresults(filename,regionList,sampleList,dataname='obsData',showSum=Fa
     binFuncInRegionList = [RooBinningCategory("bin_"+region,"bin_"+region,varinRegionList[index]) for index,region in enumerate(regionList)]
     for index, data in enumerate(regionDatasetList):
       data.addColumn(binFuncInRegionList[index])
-      if not blinded:
-        data.table(binFuncInRegionList[index]).Print("v")
+#      if not blinded:
+#        data.table(binFuncInRegionList[index]).Print("v")
       nobs_regionListWithBins.append(data.sumEntries())
       for ibin in range(0,varNbinsInRegionList[index]):
         nobs_regionListWithBins.append((data.reduce(binFuncInRegionList[index].GetName()+"=="+binFuncInRegionList[index].GetName()+"::"+varinRegionList[index].GetName()+"_bin"+str(ibin))).sumEntries())

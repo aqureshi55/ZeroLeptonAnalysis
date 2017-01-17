@@ -109,8 +109,10 @@ def makeYieldTables(anaconv, filename, regionList, samples, renamedRegions, useS
             region2 = renamedRegions[region2]
 
         regionsForTablesAll += region+suffix+","
-        if region2.find("SR") >= 0 or region2.find("CR") >= 0 or region2=="VRZ":# or region2=="VRWMf": #" or region2=="VRWM":
+        if region2.find("SR") >= 0 or region2.find("CR") >= 0:# or region2=="VRWMf": #" or region2=="VRWM":
             regionsForTables += region+suffix+","
+        # if region2.find("SR") >= 0 or region2.find("CR") >= 0 or region2=="VRZ":# or region2=="VRWMf": #" or region2=="VRWM":
+        #     regionsForTables += region+suffix+","
 
     #remove last comma
     if regionsForTablesAll[-1]==",":
@@ -324,10 +326,13 @@ def main(zlFitterConfig):
             regionList.remove("VRTb")
             regionList.remove("VRWb")
             regionList.remove("VRZb")
+            regionList.remove("VRZa")
         if ("SRG" in anaName) or ("SRS" in  anaName) :
             regionList.remove("VRQc")
             regionList.remove("VRZc")
             regionList.remove("VRZca")
+        if ("SRS" in anaName):
+            regionList.remove("VRT")
 
         print "Printing regionList"
         print regionList
