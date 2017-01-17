@@ -4,34 +4,15 @@ from ChannelConfig import *
 # definition of the control regions
 ###########################################################
 
-cleaningCut="( abs(m_jet1_eta)>2.4 || m_jet1_chf/m_jet1_FracSamplingMax>0.1) && (veto == 0)"
-
+cleaningCut="( abs(m_jet1_eta)>2.4 || m_jet1_chf/m_jet1_FracSamplingMax>0.1)"
+#cleaningCut = ""
 regionDict={}
 regionDict["SR"] = Region("SR", "SRAll", [cleaningCut], [])
 
 regionDict["CRW"] = Region("CRW", "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1  &&  nBJet==0 && lep1Pt>27"], ["btagSystWeights[0]"])
 regionDict["CRT"] = Region("CRT", "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1  &&  nBJet>0  && lep1Pt>27"], ["btagSystWeights[0]"])
-# regionDict["CRT"] = Region("CRT", "SRAll", ["nBJet>0"], ["btagSystWeights
-#regionDict["CRTZL"] = Region("CRTZL", "SRAll", ["nBJet>0",cleaningCut], [0]"])
 regionDict["CRWT"] = Region("CRWT", "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1 &&  nBJet>=0 && lep1Pt>27"], ["btagSystWeights[0]"])
 
-
-# regionDict["VRWf"] = Region("VRWf", "CRWT", ["nBJet==0"], ["btagSystWeights[0]"]) #ATT: systWeights[0] is a proxy for the lepton weight
-# regionDict["VRTf"] = Region("VRTf", "CRWT", ["nBJet>0"], ["btagSystWeights[0]"])
-
-# regionDict["VRWMf"] = Region("VRWMf", "VRWT", ["nBJet==0"], ["btagSystWeights[0]"])
-# regionDict["VRTMf"] = Region("VRTMf", "VRWT", ["nBJet>0"], ["btagSystWeights[0]"])
-# regionDict["VRWM"] = Region("VRWM", "VRWT", ["nBJet==0"], ["btagSystWeights[0]"])
-# regionDict["VRTM"] = Region("VRTM", "VRWT", ["nBJet>0"], ["btagSystWeights[0]"])
-
-# regionDict["CRZ"] = Region("CRZ", "CRZ", [], [])
-
-# regionDict["VRWTplus"] = Region("VRWTplus", "CRWT", ["lep1sign>0"], ["btagSystWeights[0]"])
-# regionDict["VRWTminus"] = Region("VRWTminus", "CRWT", ["lep1sign<0"], ["btagSystWeights[0]"])
-# regionDict["VRWTfplus"] = Region("VRWTfplus", "CRWT", ["lep1sign>0"], ["btagSystWeights[0]"])
-# regionDict["VRWTfminus"] = Region("VRWTfminus", "CRWT", ["lep1sign<0"], ["btagSystWeights[0]"])
-
-# regionDict["CRY"] = Region("CRY", "CRY", ["(phSignal[0]==1)"], [" 1.6 "])#extra weights should be applied only to gamma+jets
 regionDict["CRY"] = Region("CRY", "CRY", ["(phPt>150.) && (phTopoetcone40==0||phSignal&0x01) && (phTopoetcone40-(phPt*0.022)<2.45) && !( (phPt>800) * (weight>1) * (RunNumber==361040) )"], [])#extra weights should be applied only to gamma+jets
 regionDict["CRYQ"] = Region("CRYQ", "CRY", ["(phPt>150.) && (phTopoetcone40==0||phSignal&0x01) && (phTopoetcone40-(phPt*0.022)<2.45)"], [])#extra weights should be applied only to gamma+jets
 # regionDict["VRYf"] = Region("VRY", "CRY", ["(phSignal[0]==1 && phPt[0]>130.)"], ["1.6"])#extra weights should be applied only to gamma+jets

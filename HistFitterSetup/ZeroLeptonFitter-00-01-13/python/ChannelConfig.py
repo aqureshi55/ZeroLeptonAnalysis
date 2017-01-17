@@ -160,7 +160,7 @@ class ChannelConfig:
         self.commonWeightList = ["1000.","normWeight", "eventWeight", "WZweight"] # Note: eventweight has been moved to sysweight
 
         #cuts common to all regions (CR,SR,...=
-        self.commonCutList = "veto==0"
+        self.commonCutList = ["veto==0"]
 
         #cleaning cuts
         self.doTimingCut = True
@@ -448,7 +448,7 @@ class ChannelConfig:
             self.cleaningCuts = "((cleaning&0x30F)==0)"
 #            self.cleaningCuts = "(cleaning&0x30F) && ( abs(m_jet1_eta)>2.4 || m_jet1_chf/m_jet1_FracSamplingMax>0.1)"
             cutList.append(self.cleaningCuts)
-        cutList.append(self.commonCutList)
+        cutList.append(self.commonCutList[0])
         '''
         #effective mass cut
         if self.meffIncl >= 0 and not(self.WithoutMeffCut):
