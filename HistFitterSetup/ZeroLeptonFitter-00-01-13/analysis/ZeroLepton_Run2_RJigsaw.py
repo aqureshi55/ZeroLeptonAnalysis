@@ -533,9 +533,9 @@ sysWeight_theoSysSigDown = myreplace(configMgr.weights, ["normWeightDown"], "nor
 theoSysSig = Systematic("SigXSec", configMgr.weights, sysWeight_theoSysSigUp, sysWeight_theoSysSigDown, "weight", "overallSys")
 
 #pileup
-# sysWeight_pileupUp = myreplace(configMgr.weights, ["pileupWeightUp"], "pileupWeight")
-# sysWeight_pileupDown = myreplace(configMgr.weights, ["pileupWeightDown"], "pileupWeight")
-# pileupSys = Systematic("pileUp", configMgr.weights, sysWeight_pileupUp, sysWeight_pileupDown, "weight", "overallSys")
+sysWeight_pileupUp = myreplace(configMgr.weights, ["pileupWeightUp"], "pileupWeight")
+sysWeight_pileupDown = myreplace(configMgr.weights, ["pileupWeightDown"], "pileupWeight")
+pileupSys = Systematic("pileUp", configMgr.weights, sysWeight_pileupUp, sysWeight_pileupDown, "weight", "overallSys")
 
 
 #######################################################################
@@ -628,7 +628,7 @@ for point in allpoints:
     # #-------------------------------------------------
     # # add Systematics
     # #-------------------------------------------------
-    # myFitConfig.addSystematic(pileupSys)
+    myFitConfig.addSystematic(pileupSys)
 
     #-------------------------------------------------
     # Signal sample
