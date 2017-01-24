@@ -157,10 +157,12 @@ class ChannelConfig:
         self.optimisationRegion = False
 
         # self.commonWeightList = ["pileupWeight", "normWeight", "genWeight"] # Note: eventweight has been moved to sysweight
-        self.commonWeightList = ["1000.","normWeight", "eventWeight", "WZweight"] # Note: eventweight has been moved to sysweight
+        self.commonWeightList = ["1000.","normWeight", "eventWeight"] # Note: eventweight has been moved to sysweight
+
+#        self.commonWeightList = ["1000.","normWeight", "eventWeight", "WZweight"] # Note: eventweight has been moved to sysweight
 
         #cuts common to all regions (CR,SR,...=
-        self.commonCutList = ["veto==0"]
+        self.commonCutList = ["((veto==0)||(mcChannelNumber==410500))"]
 
         #cleaning cuts
         self.doTimingCut = True
