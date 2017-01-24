@@ -162,7 +162,7 @@ class ChannelConfig:
 #        self.commonWeightList = ["1000.","normWeight", "eventWeight", "WZweight"] # Note: eventweight has been moved to sysweight
 
         #cuts common to all regions (CR,SR,...=
-        self.commonCutList = ["((veto==0)||(mcChannelNumber==410500))"]
+        self.commonCutList = ["((veto==0)||(veto==410500))"]
 
         #cleaning cuts
         self.doTimingCut = True

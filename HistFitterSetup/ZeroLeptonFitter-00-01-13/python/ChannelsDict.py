@@ -11,7 +11,7 @@ regionDict["SR"] = Region("SR", "SRAll", [cleaningCut], [])
 
 regionDict["CRW"] = Region("CRW", "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1  &&  nBJet==0 && lep1Pt>27"], ["btagSystWeights[0]","lepTrigSF"])
 regionDict["CRT"] = Region("CRT", "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1  &&  nBJet>0  && lep1Pt>27"], ["btagSystWeights[0]","lepTrigSF"])
-regionDict["CRWT"] = Region("CRWT", "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1 &&  nBJet>=0 && lep1Pt>27"], ["btagSystWeights[0]","lepTrigSF"])
+regionDict["CRWT"] = Region("CRWT", "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1 &&  nBJet>=0 && lep1Pt>27 && 30<MTW && MTW<100"], ["btagSystWeights[0]","lepTrigSF"])
 
 regionDict["CRY"] = Region("CRY", "CRY", ["(phPt>150.) && (phTopoetcone40==0||phSignal&0x01) && (phTopoetcone40-(phPt*0.022)<2.45) && !( (phPt>800) * (weight>1) * (RunNumber==361040) )"], [])#extra weights should be applied only to gamma+jets
 regionDict["CRYQ"] = Region("CRYQ", "CRY", ["(phPt>150.) && (phTopoetcone40==0||phSignal&0x01) && (phTopoetcone40-(phPt*0.022)<2.45)"], [])#extra weights should be applied only to gamma+jets

@@ -143,14 +143,6 @@ INPUTDIR_DATA = inputConfig.data
 
 print inputConfig
 
-# # INPUTDIR = "/afs/cern.ch/work/c/crogan/public/RJWorkshopSamples/v51_Nov07_nosys_pT50/"
-# INPUTDIR = "/afs/cern.ch/work/c/crogan/public/RJWorkshopSamples/Systematics/v51_Nov07_sys_pT50/"
-# # INPUTDIR = "/afs/cern.ch/work/c/crogan/public/RJWorkshopSamples/"
-# # INPUTDIR_SIGNAL = "/afs/cern.ch/work/c/crogan/public/RJWorkshopSamples/v51_SIG_nosys_pT50/"
-# INPUTDIR_SIGNAL = "/afs/cern.ch/work/c/crogan/public/RJWorkshopSamples/Systematics/v51_Signal_sys_pT50/"
-# INPUTDIR_DATA = "/afs/cern.ch/work/c/crogan/public/RJWorkshopSamples/v53_Data_pT50/"
-
-
 # sigSamples is set by the "-g" HistFitter option
 try:
     sigSamples
@@ -252,8 +244,9 @@ if configMgr.readFromTree:
 
 
         if zlFitterConfig.useDDQCDsample:
-            qcdFiles.append(os.path.join(INPUTDIR, "JetSmearing_2015.root"))
-            qcdFiles.append(os.path.join(INPUTDIR, "JetSmearing_2016.root"))
+            qcdFiles.append(os.path.join(INPUTDIR, "JetSmearing.root"))
+            # qcdFiles.append(os.path.join(INPUTDIR, "JetSmearing_2015.root"))
+            # qcdFiles.append(os.path.join(INPUTDIR, "JetSmearing_2016.root"))
         else :
             qcdFiles.append( INPUTDIR+"/QCD.root")
 
@@ -294,11 +287,11 @@ if configMgr.readFromTree:
     #data
     # dataFiles.append(INPUTDIR_DATA, "/DataMain_Nov01.root")
     # dataFiles.append(INPUTDIR_DATA+ "/Data_Nov07.root")
-    # dataFiles.append(INPUTDIR_DATA+ "/DataMain_data15_13TeV.root")
-    # dataFiles.append(INPUTDIR_DATA+ "/DataMain_data16_13TeV.root")
+    dataFiles.append(INPUTDIR_DATA+ "/DataMain_data15_13TeV.root")
+    dataFiles.append(INPUTDIR_DATA+ "/DataMain_data16_13TeV.root")
 #    dataFiles.append(INPUTDIR_DATA+ "/DataMain.root")
 #    dataFiles.append(INPUTDIR_DATA+ "/DataMain.root")
-    dataFiles.append(INPUTDIR_DATA+ "/DataMain_311481.root")
+#    dataFiles.append(INPUTDIR_DATA+ "/DataMain_311481.root")
 
     log.info("Using the following inputs:")
     log.info("topFiles = %s" % topFiles)
@@ -321,8 +314,9 @@ def anaNameEnum (anaName) :
 
 # weights = ["weight", "WZweight"]
 weights = channel.commonWeightList
+kappaCorrection = "gammaCorWeight(mcChannelNumber, "+str(anaNameEnum(anaName))+")"
 if zlFitterConfig.applyKappaCorrection:
-    weights.append("gammaCorWeight(RunNumber, "+str(anaNameEnum(anaName))+")")
+    weights.append(kappaCorrection)
     # weights.append("1./1.6")
 configMgr.weights = weights
 
@@ -393,11 +387,7 @@ if nJets > 0 and nJets < len(zlFitterConfig.qcdWeightList)+1:
         qcdSample.addWeight(w)
     if zlFitterConfig.useDDQCDsample:#normWeight is 0 => remove it
         qcdSample.removeWeight("normWeight")
-        qcdSample.removeWeight("eventWeight")
-        qcdSample.removeWeight("WZweight")
-        qcdSample.removeWeight("1000.")
-        # qcdSample.removeWeight("weight")
-        qcdSample.addWeight("0.01")
+        qcdSample.removeWeight(kappaCorrection)
 
 
 #--------------------------
@@ -542,6 +532,11 @@ sysWeight_theoSysSigUp = myreplace(configMgr.weights, ["normWeightUp"], "normWei
 sysWeight_theoSysSigDown = myreplace(configMgr.weights, ["normWeightDown"], "normWeight")
 theoSysSig = Systematic("SigXSec", configMgr.weights, sysWeight_theoSysSigUp, sysWeight_theoSysSigDown, "weight", "overallSys")
 
+#pileup
+# sysWeight_pileupUp = myreplace(configMgr.weights, ["pileupWeightUp"], "pileupWeight")
+# sysWeight_pileupDown = myreplace(configMgr.weights, ["pileupWeightDown"], "pileupWeight")
+# pileupSys = Systematic("pileUp", configMgr.weights, sysWeight_pileupUp, sysWeight_pileupDown, "weight", "overallSys")
+
 
 #######################################################################
 # Set up fit
@@ -629,6 +624,11 @@ for point in allpoints:
     if zlFitterConfig.useDIBOSONsample:
         allSamplesList += [dibosonSample]
     myFitConfig.addSamples(allSamplesList)
+
+    # #-------------------------------------------------
+    # # add Systematics
+    # #-------------------------------------------------
+    # myFitConfig.addSystematic(pileupSys)
 
     #-------------------------------------------------
     # Signal sample
