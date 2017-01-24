@@ -261,8 +261,8 @@ if configMgr.readFromTree:
 
 
         # Topa
-        topFiles.append(INPUTDIR+ "/TopHTMET.root")
-#        topFiles.append(INPUTDIR+ "/Top.root")
+#        topFiles.append(INPUTDIR+ "/TopHTMET.root")
+        topFiles.append(INPUTDIR+ "/Top.root")
         if not zlFitterConfig.usePreComputedTopGeneratorSys:
             topFiles.append(INPUTDIR + "TopMCatNLO.root")
         if not zlFitterConfig.usePreComputedTopFragmentationSys:
