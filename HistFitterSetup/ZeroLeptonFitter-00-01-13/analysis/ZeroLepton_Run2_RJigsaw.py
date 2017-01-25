@@ -387,7 +387,11 @@ if nJets > 0 and nJets < len(zlFitterConfig.qcdWeightList)+1:
         qcdSample.addWeight(w)
     if zlFitterConfig.useDDQCDsample:#normWeight is 0 => remove it
         qcdSample.removeWeight("normWeight")
+        qcdSample.removeWeight("eventWeight")
+        qcdSample.removeWeight("pileupWeight")
+        qcdSample.removeWeight("1000.")
         qcdSample.removeWeight(kappaCorrection)
+        qcdSample.addWeight("0.01")
 
 
 #--------------------------

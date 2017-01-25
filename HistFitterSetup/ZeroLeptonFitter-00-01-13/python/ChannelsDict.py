@@ -9,8 +9,10 @@ cleaningCut="( abs(m_jet1_eta)>2.4 || m_jet1_chf/m_jet1_FracSamplingMax>0.1)"
 regionDict={}
 regionDict["SR"] = Region("SR", "SRAll", [cleaningCut], [])
 
-regionDict["CRW"] = Region("CRW", "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1  &&  nBJet==0 && lep1Pt>27"], ["btagSystWeights[0]","lepTrigSF"])
-regionDict["CRT"] = Region("CRT", "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1  &&  nBJet>0  && lep1Pt>27"], ["btagSystWeights[0]","lepTrigSF"])
+regionDict["CRW"] = Region("CRW", "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1  &&  nBJet==0 && lep1Pt>27 && 30<MT\
+W && MTW<100"], ["btagSystWeights[0]","lepTrigSF"])
+regionDict["CRT"] = Region("CRT", "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1  &&  nBJet>0  && lep1Pt>27 && 30<MT\
+W && MTW<100"], ["btagSystWeights[0]","lepTrigSF"])
 regionDict["CRWT"] = Region("CRWT", "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1 &&  nBJet>=0 && lep1Pt>27 && 30<MTW && MTW<100"], ["btagSystWeights[0]","lepTrigSF"])
 
 regionDict["CRY"] = Region("CRY", "CRY", ["(phPt>150.) && (phTopoetcone40==0||phSignal&0x01) && (phTopoetcone40-(phPt*0.022)<2.45) && !( (phPt>800) * (weight>1) * (RunNumber==361040) )"], [])#extra weights should be applied only to gamma+jets
@@ -39,14 +41,20 @@ regionDict["VRTZL"] = Region("VRTZL", "SRAll", ["nBJet>0",cleaningCut], ["btagSy
 
 
 # ##for data-driven BG estimation##
-regionDict["VRW"] = Region ("VRW",  "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1 &&  nBJet==0 && lep1Pt>27"], ["btagSystWeights[0]","lepTrigSF"])
-regionDict["VRWa"] = Region("VRWa", "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1 &&  nBJet==0 && lep1Pt>27"], ["btagSystWeights[0]","lepTrigSF"])
-regionDict["VRWb"] = Region("VRWb", "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1 &&  nBJet==0 && lep1Pt>27"], ["btagSystWeights[0]","lepTrigSF"])
+regionDict["VRW"] = Region ("VRW",  "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1 &&  nBJet==0 && lep1Pt>27 && 30<MT\
+W && MTW<100"], ["btagSystWeights[0]","lepTrigSF"])
+regionDict["VRWa"] = Region("VRWa", "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1 &&  nBJet==0 && lep1Pt>27 && 30<MT\
+W && MTW<100"], ["btagSystWeights[0]","lepTrigSF"])
+regionDict["VRWb"] = Region("VRWb", "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1 &&  nBJet==0 && lep1Pt>27 && 30<MT\
+W && MTW<100"], ["btagSystWeights[0]","lepTrigSF"])
 #regionDict["CRWL"] = Region("VRWL", "CRWT", ["nBJet==0"], ["btagSystWeigh
 #regionDict["CRWVL"] = Region("VRWVL", "CRWT", ["nBJet==0"], ["btagSystWei
-regionDict["VRT"] = Region("VRT", "CRWT",   ["(lep1Triggered & 0x03)!=0 && lep1Signal==1 && nBJet>0  && lep1Pt>27"], ["btagSystWeights[0]","lepTrigSF"])
-regionDict["VRTa"] = Region("VRTa", "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1 && nBJet>0  && lep1Pt>27"], ["btagSystWeights[0]","lepTrigSF"])
-regionDict["VRTb"] = Region("VRTb", "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1 && nBJet>0  && lep1Pt>27"], ["btagSystWeights[0]","lepTrigSF"])
+regionDict["VRT"] = Region("VRT", "CRWT",   ["(lep1Triggered & 0x03)!=0 && lep1Signal==1 && nBJet>0  && lep1Pt>2 && 30<MT\
+W && MTW<1007"], ["btagSystWeights[0]","lepTrigSF"])
+regionDict["VRTa"] = Region("VRTa", "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1 && nBJet>0  && lep1Pt>27 && 30<MT\
+W && MTW<100"], ["btagSystWeights[0]","lepTrigSF"])
+regionDict["VRTb"] = Region("VRTb", "CRWT", ["(lep1Triggered & 0x03)!=0 && lep1Signal==1 && nBJet>0  && lep1Pt>27 && 30<MT\
+W && MTW<100"], ["btagSystWeights[0]","lepTrigSF"])
 # regionDict["CRTL"] = Region("VRTL", "CRWT", ["nBJet>0"], ["btagSystWeights[0]"])
 # regionDict["CRTVL"] = Region("VRTVL", "CRWT", ["nBJet>0"], ["btagSystWeights[0]" ])
 # regionDict["CRYL"] = Region("CRYL", "CRY", ["(phSignal==1 && phPt>130."], [])#extra weights should be applied only to gamma+jets
