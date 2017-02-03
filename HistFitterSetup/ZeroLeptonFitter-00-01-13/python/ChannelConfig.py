@@ -157,7 +157,8 @@ class ChannelConfig:
         self.optimisationRegion = False
 
         # self.commonWeightList = ["pileupWeight", "normWeight", "genWeight"] # Note: eventweight has been moved to sysweight
-        self.commonWeightList = ["1000.","pileupWeight","normWeight", "eventWeight"] # Note: eventweight has been moved to sysweight
+        self.commonWeightList = ["1000.","normWeight", "eventWeight"] # Note: eventweight has been moved to sysweight
+#        self.commonWeightList = ["1000.","pileupWeight","normWeight", "eventWeight"] # Note: eventweight has been moved to sysweight
 
 #        self.commonWeightList = ["1000.","normWeight", "eventWeight", "WZweight"] # Note: eventweight has been moved to sysweight
 
@@ -362,11 +363,12 @@ class ChannelConfig:
                if k.endswith('b') or k in self.CRList:
                    v["HT3PP"] = "loosen"
                    v["HT5PP"] = "loosen"
-        for k,v in self.regionListDict.iteritems() :
+#        for k,v in self.regionListDict.iteritems() :
             # CRT, CRW
-               if (k is "CRT") or (k is "CRW"):
-                   v["eta12abtemp_max"] = "loosen"
-                   v["eta12temp_max"] = "loosen"
+            # Ann commented out Feb2
+               # if (k is "CRT") or (k is "CRW"):
+               #     v["eta12abtemp_max"] = "loosen"
+               #     v["eta12temp_max"] = "loosen"
         for k,v in self.regionListDict.iteritems():
             #check if this is a compressed CRY
             isNotCompressedRegionCRY = not ('SRJigsawSRC' in self.name and 'CRY' in k)

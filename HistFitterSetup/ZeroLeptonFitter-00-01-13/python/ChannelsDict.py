@@ -4,7 +4,7 @@ from ChannelConfig import *
 # definition of the control regions
 ###########################################################
 
-cleaningCut="( abs(m_jet1_eta)>2.4 || m_jet1_chf/m_jet1_FracSamplingMax>0.1)"
+cleaningCut="( abs(m_jet1_eta)>2.4 || m_jet1_chf/m_jet1_FracSamplingMax>0.1) && ( abs(m_jet2_eta)>2.4 || m_jet2_chf/m_jet2_FracSamplingMax>0.1)"
 #cleaningCut = ""
 regionDict={}
 regionDict["SR"] = Region("SR", "SRAll", [cleaningCut], [])

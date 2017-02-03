@@ -388,10 +388,10 @@ if nJets > 0 and nJets < len(zlFitterConfig.qcdWeightList)+1:
     if zlFitterConfig.useDDQCDsample:#normWeight is 0 => remove it
         qcdSample.removeWeight("normWeight")
         qcdSample.removeWeight("eventWeight")
-        qcdSample.removeWeight("pileupWeight")
+#        qcdSample.removeWeight("pileupWeight")
         qcdSample.removeWeight("1000.")
         qcdSample.removeWeight(kappaCorrection)
-        qcdSample.addWeight("0.01")
+        qcdSample.addWeight("0.01/1.7")
 
 
 #--------------------------
@@ -437,8 +437,8 @@ if zlFitterConfig.doSetNormRegion:
 if not zlFitterConfig.usePreComputedTopGeneratorSys:
     topSample.addSystematic(Systematic("generatorTop", "", "_aMcAtNloHerwigpp", "", "tree", "overallNormHistoSysOneSide"))
 if not zlFitterConfig.usePreComputedTopFragmentationSys:
-    topSample.addSystematic(Systematic("Pythia8Top", "" , "_PowhegPythia8", "" , "tree", "overallNormHistoSysOneSide"))
-    # topSample.addSystematic(Systematic("HerwigppTop", "", "_PowhegHerwigpp", "", "tree", "overallNormHistoSysOneSide"))
+    #topSample.addSystematic(Systematic("Pythia8Top", "" , "_PowhegPythia8", "" , "tree", "overallNormHistoSysOneSide"))
+    topSample.addSystematic(Systematic("HerwigppTop", "", "_PowhegHerwigpp", "", "tree", "overallNormHistoSysOneSide"))
 
 if not zlFitterConfig.usePreComputedTopRadiationSys:
     topSample.addSystematic(Systematic("radiationTop", "", "_RadLo", "_RadHi", "tree", "overallNormHistoSys"))
@@ -537,9 +537,9 @@ sysWeight_theoSysSigDown = myreplace(configMgr.weights, ["normWeightDown"], "nor
 theoSysSig = Systematic("SigXSec", configMgr.weights, sysWeight_theoSysSigUp, sysWeight_theoSysSigDown, "weight", "overallSys")
 
 #pileup
-sysWeight_pileupUp = myreplace(configMgr.weights, ["pileupWeightUp"], "pileupWeight")
-sysWeight_pileupDown = myreplace(configMgr.weights, ["pileupWeightDown"], "pileupWeight")
-pileupSys = Systematic("pileUp", configMgr.weights, sysWeight_pileupUp, sysWeight_pileupDown, "weight", "overallSys")
+# sysWeight_pileupUp = myreplace(configMgr.weights, ["pileupWeightUp"], "pileupWeight")
+# sysWeight_pileupDown = myreplace(configMgr.weights, ["pileupWeightDown"], "pileupWeight")
+# pileupSys = Systematic("pileUp", configMgr.weights, sysWeight_pileupUp, sysWeight_pileupDown, "weight", "overallSys")
 
 
 #######################################################################
@@ -632,7 +632,7 @@ for point in allpoints:
     # #-------------------------------------------------
     # # add Systematics
     # #-------------------------------------------------
-    myFitConfig.addSystematic(pileupSys)
+#    myFitConfig.addSystematic(pileupSys)
 
     #-------------------------------------------------
     # Signal sample
