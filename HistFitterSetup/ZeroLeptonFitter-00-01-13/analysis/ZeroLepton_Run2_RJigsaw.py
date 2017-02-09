@@ -54,6 +54,7 @@ configMgr.writeXML = zlFitterConfig.writeXML
 
 configMgr.useSignalInBlindedData = zlFitterConfig.useSignalInBlindedData
 
+#configMgr.doHypoTest = zlFitterConfig.doHypoTest
 configMgr.fixSigXSec = zlFitterConfig.fixSigXSec
 configMgr.runOnlyNominalXSec = zlFitterConfig.runOnlyNominalXSec
 
@@ -154,6 +155,7 @@ if sigSamples != None:
         grid = sigSamples[0].replace("grid", "")
         gridTreeName = grid
         allpoints = sigSamples[1:]
+        print "allpoints!: ",allpoints
 
         if not os.path.exists(os.path.join(INPUTDIR_SIGNAL, grid+".root")) and not INPUTDIR_SIGNAL.find("eos")>=0:
             log.fatal("Input file {0} for signal does not exist!".format(os.path.join(INPUTDIR_SIGNAL, grid+".root")))

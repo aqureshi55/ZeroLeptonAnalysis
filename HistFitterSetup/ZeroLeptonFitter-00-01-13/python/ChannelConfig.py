@@ -363,12 +363,12 @@ class ChannelConfig:
                if k.endswith('b') or k in self.CRList:
                    v["HT3PP"] = "loosen"
                    v["HT5PP"] = "loosen"
-#        for k,v in self.regionListDict.iteritems() :
+        for k,v in self.regionListDict.iteritems() :
             # CRT, CRW
             # Ann commented out Feb2
-               # if (k is "CRT") or (k is "CRW"):
-               #     v["eta12abtemp_max"] = "loosen"
-               #     v["eta12temp_max"] = "loosen"
+            if (k is "CRT") or (k is "CRW") or (k is "CRY") or (k is "CRQ") or (k is "CRYQ"):
+                v["eta12abtemp_max"] = "loosen"
+                v["eta12temp_max"] = "loosen"
         for k,v in self.regionListDict.iteritems():
             #check if this is a compressed CRY
             isNotCompressedRegionCRY = not ('SRJigsawSRC' in self.name and 'CRY' in k)
@@ -378,9 +378,10 @@ class ChannelConfig:
                                        ] :
                         if isNotCompressedRegionCRY or varName not in [ 'RISR','dphiISRI','NV',
                                                                         'RISR_loose','dphiISRI_loose','NV_loose',
-                                                                        ] :
-                            if '_loose' in  varName and (k in self.CRList or k.endswith('a') or k.endswith('b')) : 
+                                                                        ]:
+                            if '_loose' in  varName and (k in self.CRList or k.endswith('a') or k.endswith('b')): 
 #                            if '_loose' in  varName and (k in self.CRList or k.endswith('a') or k.endswith('b')) and (k is not "VRQa") and (k is not "VRQb") :
+#                                if (varName is not "deltaQCD" or (k is not "CRT")):
                                 v[varName.replace('_loose', '') ] = "loosen"
 
         #let's treat these a bit special.
@@ -392,6 +393,36 @@ class ChannelConfig:
         self.regionListDict["CRQ"]["deltaQCD"] = "invertAndLoosen" #MOR
 
         self.regionListDict["VRQa"]["deltaQCD"] = "invertAndLoosen" #MOR
+
+        self.regionListDict["CRT"]["NV"] = []
+        self.regionListDict["VRT"]["NV"] = []
+        self.regionListDict["VRTa"]["NV"] = []
+        self.regionListDict["VRTb"]["NV"] = []
+
+        self.regionListDict["CRW"]["NV"] = []
+        self.regionListDict["VRW"]["NV"] = []
+        self.regionListDict["VRWa"]["NV"] = []
+        self.regionListDict["VRWb"]["NV"] = []
+
+        self.regionListDict["CRQ"]["NV"] = []
+        self.regionListDict["VRQ"]["NV"] = []
+        self.regionListDict["VRQa"]["NV"] = []
+        self.regionListDict["VRQb"]["NV"] = []
+
+        self.regionListDict["CRY"]["NV"] = []
+        self.regionListDict["VRZ"]["NV"] = []
+        self.regionListDict["VRZc"]["NV"] = []
+        self.regionListDict["VRZca"]["NV"] = []
+
+        # self.regionListDict["CRT"]["deltaQCD"] = []
+        # self.regionListDict["VRT"]["deltaQCD"] = []
+        # self.regionListDict["VRTa"]["deltaQCD"] = []
+        # self.regionListDict["VRTb"]["deltaQCD"] = []
+
+        # self.regionListDict["CRW"]["deltaQCD"] = []
+        # self.regionListDict["VRW"]["deltaQCD"] = []
+        # self.regionListDict["VRWa"]["deltaQCD"] = []
+        # self.regionListDict["VRWb"]["deltaQCD"] = []
 
         self.regionListDict["VRQb"]["H2PP"] =  "invert"
         self.regionListDict["VRZc"] ["dphiISRI"] =  "invert"
@@ -624,19 +655,6 @@ class ChannelConfig:
                     stringVarValue = str(getattr(self, var)) if getattr(self, var)!=None else None
                     #print "current var:", var, stringVarValue, val
                     if stringVarValue != None :#can be zero, so use this
-#                        if "minusone" in  var:
-#                           print "omit var cut", var
-#                           continue
-#                         if "eta12temp_max" in var :
-# #                            if not val         : 
-#                             finalCutString  = "(abs(eta_jet1) <= "  + stringVarValue
-#                             finalCutString += ")*(abs(eta_jet2) <= "  + stringVarValue + ")"
-#                         elif "eta12abtemp_max" in var : #gluino
-# #                            if not val         : 
-#                             finalCutString  = "(abs(eta_jet1a) <= "  + stringVarValue 
-#                             finalCutString += ")*(abs(eta_jet1b) <= " + stringVarValue
-#                             finalCutString += ")*(abs(eta_jet2a) <= " + stringVarValue 
-#                             finalCutString += ")*(abs(eta_jet2b) <= " + stringVarValue + ")"
                         if val == 'qcd_range' :
                             neededRange = getattr(self, var + "_range") if getattr(self, var+"_range")!=None else None
                             if not neededRange : print reg,var,val, var+"_range"
@@ -646,20 +664,6 @@ class ChannelConfig:
                              if not cutValue : print reg,var,val, var+"_looseAndInverted"
                              finalCutString = str( var  + " < " + str(cutValue))
                         else :
-#                             if "etaV1_upper" in var :
-                             # if "eta12temp_max" in var :
-                             #     if not val         : 
-                             #         finalCutString  = "(abs(eta_jet1) <= "  + stringVarValue
-                             #         finalCutString += ")*(abs(eta_jet2) <= "  + stringVarValue + ")"
-                             # elif "eta12abtemp_max" in var : #gluino
-                             #     if not val         : 
-                             #         finalCutString  = "(abs(eta_jet1a) <= "  + stringVarValue 
-                             #         finalCutString += ")*(abs(eta_jet1b) <= " + stringVarValue
-                             #         finalCutString += ")*(abs(eta_jet2a) <= " + stringVarValue 
-                             #         finalCutString += ")*(abs(eta_jet2b) <= " + stringVarValue + ")"
-                             # if "dangle_upper" in var :
-                             #     removeUpper = var.replace("upper","").strip("_")
-                             #     if not val         : finalCutString = "abs(dangle) <= "  + stringVarValue
                              if "upper" in var :
                                  removeUpper = var.replace("upper","").strip("_")
                                  if not val         : finalCutString = removeUpper + " <= "  + stringVarValue
@@ -674,7 +678,7 @@ class ChannelConfig:
                                  if val == 'tightendphiMin2': finalCutString = var         + " >= 0.4 "
                                  if val == 'loosen' :
                                      loosenedStringVarValue = str(getattr(self, var + "_loose")) if getattr(self, var+"_loose")!=None else None
-                                     if ((reg is "CRW") or (reg is "CRT")):
+                                     if ((reg is "CRW") or (reg is "CRT") or (reg is "CRY") or (reg is "CRQ") or (reg is "CRYQ")):
                                          stringVarValue = loosenedStringVarValue
                                      if not loosenedStringVarValue : print reg,var,val, var+"_loose"
                                      finalCutString                  = var         + " >=  " + loosenedStringVarValue
@@ -682,19 +686,9 @@ class ChannelConfig:
                                      loosenedStringVarValue = str(getattr(self, var + "_loose")) if getattr(self, var+"_loose")!=None else None
                                      finalCutString                  = var         + " <  " + loosenedStringVarValue
                         if "eta12temp_max" in var :
-                            # finalCutString  = "(abs(eta_jet1) <= "  + stringVarValue
-                            # finalCutString += ")*(abs(eta_jet2) <= "  + stringVarValue + ")"
                             finalCutString = "eta12 <= " + stringVarValue
                         elif "eta12abtemp_max" in var : #gluino
-                            # finalCutString  = "(abs(eta_jet1) <= "  + stringVarValue 
-                            # finalCutString += ")*(abs(eta_jet2) <= " + stringVarValue
-                            # finalCutString += ")*(abs(eta_jet3) <= " + stringVarValue 
-                            # finalCutString += ")*(abs(eta_jet4) <= " + stringVarValue + ")"
                             finalCutString = "eta12ab <= " + stringVarValue
-                            # finalCutString  = "(abs(eta_jet1a) <= "  + stringVarValue 
-                            # finalCutString += ")*(abs(eta_jet1b) <= " + stringVarValue
-                            # finalCutString += ")*(abs(eta_jet2a) <= " + stringVarValue 
-                            # finalCutString += ")*(abs(eta_jet2b) <= " + stringVarValue + ")"
                         elif "etaV1_max" in var :
                             finalCutString = "etaV1 <= " + stringVarValue
                         elif "etaV2_max" in var :
