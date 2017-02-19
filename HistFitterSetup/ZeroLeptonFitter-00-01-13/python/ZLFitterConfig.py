@@ -25,11 +25,12 @@ class ZLFitterConfig:
         ##############################################
 
         # blinding
-        self.blindSR = True
+        self.blindSR = False
         self.blindCR = False
         self.blindVR = False
         self.useSignalInBlindedData = False
 
+#        self.doHypoTest = True
         #Run hypotests with also with up and down theor. uncert.? False: add uncert. as fit parameter
         self.fixSigXSec = True
 
@@ -81,7 +82,7 @@ class ZLFitterConfig:
         # Apply a user-defined error to the background and signal errors? (Useful if setting everything to MC pred)
         self.usePrecomputedError = True
         self.flatErrorSignal=0.0  #this number is only used for the signal, see TheoUncertainties.py for the background
-        self.usePreComputedWGeneratorSys=False
+        self.usePreComputedWGeneratorSys=True
         self.usePreComputedTopGeneratorSys=False
         self.usePreComputedTopFragmentationSys=False
         self.usePreComputedTopRadiationSys=False

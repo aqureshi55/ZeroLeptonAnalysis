@@ -9,6 +9,8 @@ def getError(channelName, regionName, sysDict):
     #print sysDict
     if (channelName,regionName) in sysDict.keys():
         error = sysDict[(channelName,regionName)]
+    elif (channelName,"default") in sysDict.keys():
+        error = sysDict[(channelName,"default")]
     elif ("default","default") in sysDict.keys():
         error = sysDict[("default","default")]
     return error
@@ -26,14 +28,25 @@ dibosonFlatSysDict[("default","default")] = 0.50
 # Sherpa vs MadGraph
 zTheoSysGeneratorDict = {}
 zTheoSysGeneratorDict[("default","default")] = 0.11
-# zTheoSysGeneratorDict[("SR2jl","SR")]= -0.0492965028609
-# zTheoSysGeneratorDict[("SR2jm","SR")]= -0.0370988518057
-# zTheoSysGeneratorDict[("SR2jt","SR")] = -0.155169680736
-# zTheoSysGeneratorDict[("SR4jt","SR")]= -0.21787914673
-# zTheoSysGeneratorDict[("SR5j","SR")]= 0.0923664820396
-# zTheoSysGeneratorDict[("SR6jm","SR")]= -0.160137123349
-# zTheoSysGeneratorDict[("SR6jt","SR")]= 0.276153830015
-
+zTheoSysGeneratorDict[("SRJigsawSRS1a","default")] = 0.0835866
+zTheoSysGeneratorDict[("SRJigsawSRS1b","default")] = 0.0763378
+zTheoSysGeneratorDict[("SRJigsawSRS2a","default")] = 0.0689389
+zTheoSysGeneratorDict[("SRJigsawSRS2b","default")] = 0.0756263
+zTheoSysGeneratorDict[("SRJigsawSRS3a","default")] = 0.0664213
+zTheoSysGeneratorDict[("SRJigsawSRS3b","default")] = 0.0645755
+zTheoSysGeneratorDict[("SRJigsawSRS4","default")] = 0.0597674
+zTheoSysGeneratorDict[("SRJigsawSRG1a","default")] = 0.0813217
+zTheoSysGeneratorDict[("SRJigsawSRG1b","default")] = 0.0837482
+zTheoSysGeneratorDict[("SRJigsawSRG2a","default")] = 0.0672614
+zTheoSysGeneratorDict[("SRJigsawSRG2b","default")] = 0.0998166
+zTheoSysGeneratorDict[("SRJigsawSRG3a","default")] = 0.0828165
+zTheoSysGeneratorDict[("SRJigsawSRG3b","default")] = 0.208771
+zTheoSysGeneratorDict[("SRJigsawSRG4","default")] = 0.141553
+zTheoSysGeneratorDict[("SRJigsawSRC1","default")] = 0.0801382
+zTheoSysGeneratorDict[("SRJigsawSRC2","default")] = 0.0832055
+zTheoSysGeneratorDict[("SRJigsawSRC3","default")] = 0.11795
+zTheoSysGeneratorDict[("SRJigsawSRC4","default")] = 0.111056
+zTheoSysGeneratorDict[("SRJigsawSRC5","default")] = 0.164243
 
 #######################################
 #W+jets
@@ -41,13 +54,25 @@ zTheoSysGeneratorDict[("default","default")] = 0.11
 # SHerpa vs MadGraph
 wTheoSysGeneratorDict = {}
 wTheoSysGeneratorDict[("default","default")] = 0.10
-wTheoSysGeneratorDict[("SR2jl","SR")]= -0.137045746682
-wTheoSysGeneratorDict[("SR2jm","SR")]= -0.290595308464
-wTheoSysGeneratorDict[("SR2jt","SR")]= 0.381580286919
-wTheoSysGeneratorDict[("SR4jt","SR")]= 0.419408662966
-wTheoSysGeneratorDict[("SR5j","SR")]= 0.0955335300997
-wTheoSysGeneratorDict[("SR6jm","SR")]= 0.0359964709075
-wTheoSysGeneratorDict[("SR6jt","SR")]= 0.546637484457
+wTheoSysGeneratorDict[("SRJigsawSRS1a","default")] = 0.110786
+wTheoSysGeneratorDict[("SRJigsawSRS1b","default")] = 0.115062
+wTheoSysGeneratorDict[("SRJigsawSRS2a","default")] = 0.131817
+wTheoSysGeneratorDict[("SRJigsawSRS2b","default")] = 0.13979
+wTheoSysGeneratorDict[("SRJigsawSRS3a","default")] = 0.120151
+wTheoSysGeneratorDict[("SRJigsawSRS3b","default")] = 0.124532
+wTheoSysGeneratorDict[("SRJigsawSRS4","default")] = 0.139939
+wTheoSysGeneratorDict[("SRJigsawSRG1a","default")] = 0.111579
+wTheoSysGeneratorDict[("SRJigsawSRG1b","default")] = 0.0968154
+wTheoSysGeneratorDict[("SRJigsawSRG2a","default")] = 0.0737987
+wTheoSysGeneratorDict[("SRJigsawSRG2b","default")] = 0.0954486
+wTheoSysGeneratorDict[("SRJigsawSRG3a","default")] = 0.116864
+wTheoSysGeneratorDict[("SRJigsawSRG3b","default")] = 0.358518
+wTheoSysGeneratorDict[("SRJigsawSRG4","default")] = 0.268703
+wTheoSysGeneratorDict[("SRJigsawSRC1","default")] = 0.168484
+wTheoSysGeneratorDict[("SRJigsawSRC2","default")] = 0.166257
+wTheoSysGeneratorDict[("SRJigsawSRC3","default")] = 0.100981
+wTheoSysGeneratorDict[("SRJigsawSRC4","default")] = 0.118663
+wTheoSysGeneratorDict[("SRJigsawSRC5","default")] = 0.139578
 
 
 #######################################

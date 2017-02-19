@@ -499,6 +499,7 @@ anaSRJigsawSRSquarkCommon.HT3PP_loose             = 1000
 anaSRJigsawSRSquarkCommon.H2PP_loose              = 800 #1000
 anaSRJigsawSRSquarkCommon.deltaQCD                = 0.
 anaSRJigsawSRSquarkCommon.deltaQCD_loose          = 0.
+anaSRJigsawSRSquarkCommon.deltaQCD_looseAndInverted     = -0.98 #AW just added
 anaSRJigsawSRSquarkCommon.eta12temp_max_loose       = 2.8
 
 anaSRJigsawSRS1Common                   = copy.deepcopy( anaSRJigsawSRSquarkCommon )
@@ -607,7 +608,8 @@ anaSRJigsawCoBasic=ChannelConfig(name="SRJigsawCoBasic",regionDict=regionDict)
 anaSRJigsawCoBasic.met            = 250
 #loosen CR cuts
 anaSRJigsawCoBasic.RISR_loose     = 0.7
-anaSRJigsawCoBasic.RISR_looseAndInverted     = 0.5
+anaSRJigsawCoBasic.RISR_tightrange     = (0.4,0.5)
+#anaSRJigsawCoBasic.RISR_looseAndInverted     = 0.5
 anaSRJigsawCoBasic.RISR_range     = (0.5, 0.7)
 anaSRJigsawCoBasic.MS_loose       = 0 #100
 anaSRJigsawCoBasic.dphiISRI_loose = 0.95*3.14159 #2.95

@@ -1,7 +1,3 @@
-
-
-
-
 #################################################
 # Channel configuration
 #################################################
@@ -293,7 +289,11 @@ class ChannelConfig:
 
         self.RISR_loose              = None #0
         self.RISR_range              = None
+        # AW
+        self.RISR_tightrange         = None
         self.RISR_qcdlooseAndInverted  = None #0
+        #AW
+        self.deltaQCD_qcdlooseAndInverted  = None #0
         self.MS_loose                = None #0
         self.dphiISRI_loose          = None #0
         self.PTISR_loose             = None #0
@@ -386,12 +386,13 @@ class ChannelConfig:
 
         #let's treat these a bit special.
         #this is getting a bit out of hand
-        self.regionListDict["CRQ"] ["RISR"]        =  "qcd_invertAndLoosen"
+#        self.regionListDict["CRQ"] ["RISR"]        =  "qcd_invertAndLoosen"
+        self.regionListDict["CRQ"] ["RISR"]        =  "qcd_tightrange"
         self.regionListDict["VRQc"]["RISR"]        =  "qcd_range"
 
         self.regionListDict["CRQ"]["H2PP"] =  "invert"
         self.regionListDict["CRQ"]["deltaQCD"] = "invertAndLoosen" #MOR
-
+#        self.regionListDict["CRQ"] ["deltaQCD"]        =  "qcd_invertAndLoosen" #SRS only AWFIT
         self.regionListDict["VRQa"]["deltaQCD"] = "invertAndLoosen" #MOR
 
         self.regionListDict["CRT"]["NV"] = []
@@ -413,6 +414,12 @@ class ChannelConfig:
         self.regionListDict["VRZ"]["NV"] = []
         self.regionListDict["VRZc"]["NV"] = []
         self.regionListDict["VRZca"]["NV"] = []
+
+        #SRS ONLY!!!!! AWFIT
+        # self.regionListDict["CRY"]["deltaQCD"] = []
+        # self.regionListDict["VRZ"]["deltaQCD"] = []
+        # self.regionListDict["VRZc"]["deltaQCD"] = []
+        # self.regionListDict["VRZca"]["deltaQCD"] = []
 
         # self.regionListDict["CRT"]["deltaQCD"] = []
         # self.regionListDict["VRT"]["deltaQCD"] = []
@@ -655,7 +662,11 @@ class ChannelConfig:
                     stringVarValue = str(getattr(self, var)) if getattr(self, var)!=None else None
                     #print "current var:", var, stringVarValue, val
                     if stringVarValue != None :#can be zero, so use this
-                        if val == 'qcd_range' :
+                        if val == 'qcd_tightrange' :
+                            neededRange = getattr(self, var + "_tightrange") if getattr(self, var+"_tightrange")!=None else None
+                            if not neededRange : print reg,var,val, var+"_tightrange"
+                            finalCutString = "(" + var + " >= "+ str( neededRange[0]) + ")" + "*" + "(" +  var + " <= " +str( neededRange[1]) + ")"                        
+                        elif val == 'qcd_range' :
                             neededRange = getattr(self, var + "_range") if getattr(self, var+"_range")!=None else None
                             if not neededRange : print reg,var,val, var+"_range"
                             finalCutString = "(" + var + " >= "+ str( neededRange[0]) + ")" + "*" + "(" +  var + " <= " +str( neededRange[1]) + ")"
@@ -695,10 +706,15 @@ class ChannelConfig:
                             finalCutString = "etaV2 <= " + stringVarValue
                         elif "etaV3_max" in var :
                             finalCutString = "etaV3 <= " + stringVarValue
+                    # if ((reg is "CRQ") or (reg is "VRQa") or (reg is "VRQb")) \
+                    #         and not ("SRJigsawSRC" in self.name):
+                    #     finalCutString = "fabs(cosP) >= 0.7"
 
                     if finalCutString:
                         cutList.append(finalCutString)
-
+                if ((reg is "CRQ") or (reg is "VRQa") or (reg is "VRQb")) and \
+                        not ("SRJigsawSRC" in self.name) and not ("SRJigsawSRG" in self.name):
+                    cutList.append("fabs(cosP) >= 0.95")
                             #print finalCutString
                             #print regionName, "cutlist", cutList
 
