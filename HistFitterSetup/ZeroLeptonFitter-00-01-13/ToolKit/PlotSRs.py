@@ -105,20 +105,22 @@ def main():
 
 
     allAna=sorted(finalChannelsDict.keys())
-
-    #order per number of events per jet multiplicity
-    #allAna=
-    #allAna=["SR2jl","SR2jm","SR2jt","SR2jW","SR3j","SR4jl-","SR4jl","SR4jm","SR4jt","SR4jW","SR5j","SR6jl","SR6jm","SR6jt","SR6jt+"]
-
+    for channel in allAna:
+        if ("Common" in channel):
+            print channel
+            allAna.remove(channel)
+    print allAna
     nSR=len(allAna)
+    print "SR: ",nSR
 
     hist_data = TH1F("data","data",nSR,0,nSR)
     hist_data.GetYaxis().SetTitle("Events")
     if REGIONNAME=="SR":
-        hist_data.GetXaxis().SetTitle("Signal Region")
+        hist_data.GetXaxis().SetTitle("RJR Signal Region")
     else:
         print "=== ",REGIONNAME,niceName(REGIONNAME)
         hist_data.GetXaxis().SetTitle(niceName(REGIONNAME))
+#    hist_data.GetXaxis().LabelsOption("v")
     hist_data.GetYaxis().SetTitleOffset(0.85)
     hist_dataClone=hist_data.Clone()
     graph_data=TGraphAsymmErrors(nSR)
@@ -170,7 +172,7 @@ def main():
 
         print channel
         hist_data.GetXaxis().SetBinLabel(counter,channel.replace("SR","").replace("Jigsaw", "RJR-"))
-
+        hist_data.GetXaxis().LabelsOption("v")
         hist_data.SetBinContent(counter,nobs)
         graph_data.SetPoint(counter-1,hist_data.GetBinCenter(counter),nobs)
         pEr=PoissonError(nobs)
@@ -251,8 +253,8 @@ def main():
         line.Draw("same")
         all.append(line)
 
-    leg1= TLegend(0.6,0.52,0.85,0.9);
-    leg1.SetTextSize( 0.05 );
+    leg1= TLegend(0.6,0.60,0.85,0.9);
+    leg1.SetTextSize( 0.04 );
     leg1.SetTextFont( 42 );
     leg1.SetFillColor( 10 );
     leg1.SetBorderSize( 0 );
@@ -358,7 +360,7 @@ def main():
     #lowerPad.SetTicky(1);
     lowerPad.SetTopMargin   ( 0.00 );
     lowerPad.SetRightMargin ( 0.1 );
-    lowerPad.SetBottomMargin( 0.4 );
+    lowerPad.SetBottomMargin( 0.45 );
     lowerPad.SetLeftMargin( 0.10 );
     lowerPad.Draw()
 
@@ -410,19 +412,20 @@ def main():
     lowerPad.cd()
     highestBinContent = hist_ratio.GetBinContent(hist_ratio.GetMaximumBin() )
     if highestBinContent > Max2:
-        Max2 = highestBinContent+0.5
+        Max2 = highestBinContent+0.8
     hist_ratio.SetMaximum(Max2)
     hist_ratio.SetMinimum(Min2)
     hist_ratio.GetYaxis().SetTitle("Data/SM Total")
 
     print "rrrr",hist_ratio.GetYaxis().GetLabelSize(),hist_ratio.GetYaxis().GetTitleSize(),hist_ratio.GetYaxis().GetTitleOffset()
-    hist_ratio.GetYaxis().SetLabelSize(0.08)
-    hist_ratio.GetYaxis().SetTitleSize(0.08)
+    hist_ratio.GetYaxis().SetLabelSize(0.078)
+    hist_ratio.GetYaxis().SetTitleSize(0.078)
     hist_ratio.GetYaxis().SetTitleOffset(0.5)
+    hist_ratio.GetYaxis().SetNdivisions(808)
 
-    hist_ratio.GetXaxis().SetLabelSize(0.12)
+    hist_ratio.GetXaxis().SetLabelSize(0.10)
     hist_ratio.GetXaxis().SetTitleSize(0.1)
-    hist_ratio.GetXaxis().SetTitleOffset(1.4)
+    hist_ratio.GetXaxis().SetTitleOffset(2.3)
     hist_ratio.GetXaxis().SetLabelOffset(0.02)
     print "rrrr",hist_ratio.GetYaxis().GetLabelSize(),hist_ratio.GetYaxis().GetTitleSize(),hist_ratio.GetYaxis().GetTitleOffset()
 

@@ -39,15 +39,8 @@ def parseCmdLine(args):
 
 def main():
     config = parseCmdLine(sys.argv[1:])
-    scriptname = os.environ['ZEROLEPTONFITTER']+"/analysis/ZeroLepton_Run2.py"
+    scriptname = os.environ['ZEROLEPTONFITTER']+"/analysis/ZeroLepton_Run2_RJigsaw.py"
 
-
-#    grid="SM_SS_direct"
-#    points=['412_37', '412_187', '487_112', '600_0', '412_337', '487_262', '600_150', '750_0', '412_387', '487_412', '600_300', '750_150', '900_0', '487_462', '600_450', '750_300', '1050_0', '750_450']
-
-
-    grid="NUHMG"
-    points=['2000000_450','2800000_450','2800000_490']
 
     option = "-t -w -f "
     #option = " -w -f "
@@ -88,7 +81,7 @@ def main():
             log+="Bkg.log"
 
         if int(config.FitType)!=2:
-            cmd= "HistFitter.py "+option+" -r "+ana+" "+scriptname
+            cmd= "../HistFitter-00-00-52/scripts/HistFitter.py "+option+" -r "+ana+" "+scriptname
 
 
 
@@ -131,6 +124,7 @@ def main():
         err=log
         qsub_option=" -P P_atlas -l ct=20000,vmem=2048M,fsize=17G,sps=1 "
         cmd="bsub -q 1nd -e "+err+" -o "+log+" "+filename
+        cmd="sbatch 
     
         print "\n"
         print cmd

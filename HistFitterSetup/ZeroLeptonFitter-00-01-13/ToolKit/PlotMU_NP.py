@@ -10,7 +10,7 @@ import sys
 import math
 import copy
 import pickle
-import ROOT
+from ROOT import *
 from ChannelsDict import *
 from ZLFitterConfig import *
 import os
@@ -40,7 +40,6 @@ def MakeBox(color=ROOT.kGreen,offset=0,ymin=-1,ymax=1):
 
 
 def main():
-    print "FINAL CHANNELS", finalChannelsDict
     for channel in sorted(finalChannelsDict.keys()):
         if channel is ('SRJigsawSRG1Common'):
             del finalChannelsDict[channel]
@@ -50,20 +49,37 @@ def main():
             del finalChannelsDict[channel]
         if channel is 'SRJigsawSRG4Common':
             del finalChannelsDict[channel]
+        if channel is 'SRJigsawSRC2':
+            del finalChannelsDict[channel]
+        if channel is 'SRJigsawSRC4':
+            del finalChannelsDict[channel]
+        if channel is 'SRJigsawSRG1b':
+            del finalChannelsDict[channel]
+        if channel is 'SRJigsawSRG2b':
+            del finalChannelsDict[channel]
+        if channel is 'SRJigsawSRG3a':
+            del finalChannelsDict[channel]
+        if channel is 'SRJigsawSRG3b':
+            del finalChannelsDict[channel]
+        if channel is 'SRJigsawSRG4':
+            del finalChannelsDict[channel]
+        if channel is 'SRJigsawSRS1b':
+            del finalChannelsDict[channel]
+        if channel is 'SRJigsawSRS2b':
+            del finalChannelsDict[channel]
+        if channel is 'SRJigsawSRS3a':
+            del finalChannelsDict[channel]
+        if channel is 'SRJigsawSRS3b':
+            del finalChannelsDict[channel]
+        if channel is 'SRJigsawSRS4':
+            del finalChannelsDict[channel]
     print "FINAL CHANNELS", finalChannelsDict
+
     ## Get list of mu parameters (present in all SRs)
     for channel in sorted(finalChannelsDict.keys()):
-        if channel is ('SRJigsawSRG1Common'):
-            continue
-        if channel is  'SRJigsawSRG2Common':
-            continue
-        if channel is 'SRJigsawSRG3Common':
-            continue
-        if channel is 'SRJigsawSRG4Common':
-            continue
         if not os.path.exists("MU_%s.pkl" % channel):
             continue
-        
+
         try:
             fMU = open('MU_%s.pkl' % channel,'r')
         except:
@@ -76,10 +92,9 @@ def main():
         print "========="
 
         for item in theList:
-            #if not 'Yield' in item[0]: continue
             if not item[0] in dMU: dMU[item[0]] = {}
             dMU[item[0]][channel] = [item[1],item[2]]
-            print item[0],channel,dMU[item[0]][channel],item
+            # print item[0],channel,dMU[item[0]][channel],item
         fMU.close()
        
         try:
@@ -97,10 +112,11 @@ def main():
     
     ## Prepare MU histograms
     nChannels = len(finalChannelsDict.keys())
+    
+    # Remove multijets
+    del dMU["Multijets"]
+    
     for mu in dMU:
-        print mu
-        print sorted(dMU[mu].keys())
-        print sorted(finalChannelsDict.keys())
         if len(dMU[mu].keys()) != nChannels:
             print "nChannels = %d, len(dMU) = %d" % (nChannels, len(dMU[mu].keys()))
             continue
@@ -125,7 +141,21 @@ def main():
             print bin,mu,dMU[mu][channel][0]
             dMU[mu]['hist'].SetBinContent(bin+1,dMU[mu][channel][0])
             dMU[mu]['hist'].SetBinError(bin+1,dMU[mu][channel][1])
-            dMU[mu]['hist'].GetXaxis().SetBinLabel(bin+1,channel[2:])
+            channelName=channel.replace("Jigsaw","").replace("SRSR", "SR").replace("SR", "RJR-")
+            if channelName == "RJR-C1":
+                channelName = "RJR-C1/C2"
+            if channelName == "RJR-C3":
+                channelName = "RJR-C3/C4"
+            if channelName == "RJR-G1a":
+                channelName = "RJR-G1"
+            if channelName == "RJR-G2a":
+                channelName = "RJR-G2/G3/G4"
+            if channelName == "RJR-S1a":
+                channelName = "RJR-S1"
+            if channelName == "RJR-S2a":
+                channelName = "RJR-S2/S3/S4"
+            dMU[mu]['hist'].GetXaxis().SetBinLabel(bin+1,channelName)
+            dMU[mu]['hist'].GetXaxis().LabelsOption("v")
             dMU[mu]['histbis'].SetBinContent(bin+1,dMU[mu][channel][0])
             dMU[mu]['histbis'].SetBinError(bin+1,0.0001)
     
@@ -167,34 +197,44 @@ if __name__ == "__main__":
     AtlasStyle.SetAtlasStyle()
     from math import *
     
-    # #MUZ/W plot
-    # for k,v in dMU["W"].items():
-    #    if k.find("hist")>=0: continue
-    #    print "toto",k,(dMU["W"][k][0]-dMU["Z"][k][0])/dMU["Z"][k][0],(dMU["W"][k][0]-dMU["Z"][k][0])/sqrt(pow(dMU["W"][k][1],2)+pow(dMU["Z"][k][1],2))
-
-    
     ## MU plot
     plots['MU'] = {}
-    plots['MU']['canvas'] = ROOT.TCanvas('cMU','cMU')
+    plots['MU']['canvas'] = ROOT.TCanvas('cMU','cMU',700*3,600*3)
     canvas = plots['MU']['canvas']
     plots['MU']['pads'] = []
     for ipad in range(len(dMU.keys())):
-        width = (0.95 - 0.05) / len(dMU.keys())
-        ymax = 0.95 - ipad * width
-        ymin = 0.95 - (ipad + 1) * width
-        if ipad == len(dMU.keys()) - 1: ymin = ymin - 0.025
+        print "IPAD",ipad
+        if (ipad == 0):
+            ymax = 0.95
+            ymin = 0.75
+        if (ipad == 1):
+            ymax = 0.75
+            ymin = 0.55
+        if (ipad == 2):
+            ymax = 0.55
+            ymin = 0.05
+        # width = (0.95 - 0.15) / len(dMU.keys())
+        # width = 0.25
+        # ymax = 0.95 - ipad * width 
+        # ymin = 0.95 - (ipad + 1) * width
+        # if ipad == len(dMU.keys()) - 1: 
+        #     ymin = 0.15
+        #     ymax = 0.45
+        print "OOOO>",ipad,ymin,ymax
         plots['MU']['pads'].append(ROOT.TPad("MU_%d" % (ipad+1),"MU_%d" % (ipad+1),0.001,ymin,0.995,ymax))
         pad = plots['MU']['pads'][ipad]
         pad.SetFillColor(0)
         pad.SetBorderMode(0)
         pad.SetBorderSize(2)
         pad.SetTicks()
-        pad.SetTopMargin(0.05)
-        pad.SetRightMargin(0.1)
+        pad.SetTopMargin(0.)
+        if ipad == 0:
+            pad.SetTopMargin(0.00)
+        pad.SetRightMargin(0.05)
         if ipad != len(dMU.keys()) - 1:
             pad.SetBottomMargin(0.)
         else:
-            pad.SetBottomMargin(0.45)
+            pad.SetBottomMargin(0.6)
         pad.SetLeftMargin(0.10)
         pad.SetFrameBorderMode(0)
         pad.SetFrameBorderMode(0)
@@ -210,26 +250,57 @@ if __name__ == "__main__":
 
         if not 'hist' in dMU[mu]:
             continue
-        print "Drawing"
-        dMU[mu]['hist'].GetXaxis().SetLabelOffset(0.02)
-        dMU[mu]['hist'].GetXaxis().SetLabelSize(0.2)
+
+        dMU[mu]['hist'].GetXaxis().SetLabelOffset(0.03)
+        dMU[mu]['hist'].GetXaxis().SetLabelSize(0.25)
         dMU[mu]['hist'].GetYaxis().SetTitleOffset(0.25)
         dMU[mu]['hist'].GetYaxis().SetTitleSize(0.15)
+        
+
         dMU[mu]['hist'].GetYaxis().SetLabelSize(0.15)
         dMU[mu]['hist'].GetYaxis().SetNdivisions(505)
         dMU[mu]['hist'].GetYaxis().CenterTitle(True)
-        if 'Top' in mu:
-            dMU[mu]['hist'].GetYaxis().SetRangeUser(-0.25,4.)
-        elif not 'Multijets' in mu:
-            dMU[mu]['hist'].GetYaxis().SetRangeUser(-0.25,1.75)
+        dMU[mu]['hist'].GetYaxis().SetRangeUser(-0.25,2.15)
+
+        if imu == len(dMU.keys())-1:
+            scale=0.4
+            dMU[mu]['hist'].GetYaxis().SetTickLength(0.075)
+            dMU[mu]['hist'].GetXaxis().SetLabelOffset(0.02)
+            dMU[mu]['hist'].GetXaxis().SetLabelSize(0.25*scale)
+            dMU[mu]['hist'].GetYaxis().SetTitleOffset(0.25/scale)
+            dMU[mu]['hist'].GetYaxis().SetTitleSize(0.15*scale)
+            dMU[mu]['hist'].GetYaxis().SetLabelSize(0.15*scale)
+
         dMU[mu]['hist'].Draw('E2')
         dMU[mu]['histbis'].Draw('E SAME')
-        if not 'Multijets' in mu:
-            dMU[mu]['line'] = ROOT.TLine(0.,1.,len(finalChannelsDict.keys()),1.)
-            dMU[mu]['line'].SetLineColor(ROOT.kRed) 
-            dMU[mu]['line'].SetLineStyle(2) 
-            dMU[mu]['line'].SetLineWidth(2) 
-            dMU[mu]['line'].Draw() 
+        dMU[mu]['line'] = ROOT.TLine(0.,1.,len(finalChannelsDict.keys()),1.)
+        dMU[mu]['line'].SetLineColor(ROOT.kRed) 
+        dMU[mu]['line'].SetLineStyle(2) 
+        dMU[mu]['line'].SetLineWidth(2) 
+        dMU[mu]['line'].Draw() 
+
+    canvas.cd()
+    text = TLatex()
+    text.SetTextFont(42)
+    text.SetTextSize(0.04)
+    text.SetTextColor(ROOT.kBlack)
+    text.SetNDC(True)
+    text.DrawLatex(0.15,0.9,"#bf{#it{ATLAS}}")
+
+    textl = TLatex()
+    textl.SetTextFont(42)
+    textl.SetTextSize(0.04)
+    textl.SetTextColor(kBlack)
+    textl.SetNDC(True)
+    textl.DrawLatex(0.6,0.9,"#sqrt{s}=13TeV, "+str(round(zlFitterConfig.luminosity,1))+" fb^{-1}");
+
+    textint = ROOT.TLatex()
+    textint.SetTextFont(42)
+    textint.SetTextSize(0.04)
+    textint.SetTextColor(ROOT.kBlack)
+    textint.SetNDC(True)
+    textint.DrawLatex(0.27,0.9,"Internal")
+
     canvas.Print('summaryMU.eps')
     canvas.Print('summaryMU.png')
     canvas.Print('summaryMU.pdf')
@@ -256,7 +327,7 @@ if __name__ == "__main__":
         if ipad != nChannels - 1:
             pad.SetBottomMargin(0.)
         else:
-            pad.SetBottomMargin(0.7)
+            pad.SetBottomMargin(0.6)
         pad.SetLeftMargin(0.10)
         pad.SetFrameBorderMode(0)
         pad.SetFrameBorderMode(0)

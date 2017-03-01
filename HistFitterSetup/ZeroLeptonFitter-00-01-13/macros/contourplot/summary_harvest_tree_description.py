@@ -1,17 +1,19 @@
 #!/usr/bin/env python
 
 import os, sys, ROOT
-from ROOT import TTree, TString
+#from ROOT import TTree, TString
+
+ROOT.gROOT.SetBatch(True)
+ROOT.PyConfig.IgnoreCommandLineOptions = True
 
 def treedescription():
-  filename = '/afs/cern.ch/work/n/nakahama/Run2/ZL/ZL_trunk_new/macros/contourplot/ZL_SROpt_nJets-6_dPhi-0.4_Ap-0.04_Meff-1800_metomeffNj-0.2_pt12-200_pt34-150_Gtt_1300_100_Output_fixSigXSecNominal_hypotest__1_harvest_list'
-  description = "p0:p1:CLs:mode:nexp:seed:CLsexp:fID:sigma0:sigma1:clsu1s:clsd1s:clsu2s:clsd2s:p0exp:p0u1s:p0d1s:p0u2s:p0d2s:upperLimit:upperLimitEstimatedError:expectedUpperLimit:expectedUpperLimitPlus1Sig:expectedUpperLimitPlus2Sig:expectedUpperLimitMinus1Sig:expectedUpperLimitMinus2Sig:xsec:excludedXsec:covqual:dodgycov:failedcov:failedfit:failedp0:failedstatus:fitstatus:m0:m12:nofit"
-  #description = "p0:p1:CLs:mode:nexp:seed:CLsexp:fID:sigma0:sigma1:clsu1s:clsd1s:clsu2s:clsd2s:p0exp:p0u1s:p0d1s:p0u2s:p0d2s:upperLimit:upperLimitEstimatedError:expectedUpperLimit:expectedUpperLimitPlus1Sig:expectedUpperLimitPlus2Sig:expectedUpperLimitMinus1Sig:expectedUpperLimitMinus2Sig:xsec:excludedXsec:covqual:dodgycov:failedcov:failedfit:failedp0:failedstatus:fitstatus:mchargino:mgluino:mlsp:nofit"
+  filename = "/n/home13/annwang/ZeroLeptonAnalysis/HistFitterSetup/ZeroLeptonFitter-00-01-13/macros/contourplot/Outputs/36.1ifb/SS_onestepCC/SS_onestepCC_SRJigsawSRG1a_fixSigXSecDown__mlspNE60_harvest_list"
+  description = "expectedUpperLimitMinus1Sig/F:upperLimitEstimatedError/F:fitstatus/F:p0d2s/F:p0u2s/F:seed/F:CLsexp/F:sigma1/F:failedfit/F:mlsp/F:expectedUpperLimitPlus2Sig/F:nofit/F:msquark/F:nexp/F:sigma0/F:clsd2s/F:expectedUpperLimit/F:failedstatus/F:xsec/F:covqual/F:upperLimit/F:p0d1s/F:mchargino/F:clsd1s/F:failedp0/F:failedcov/F:p0exp/F:p1/F:p0u1s/F:excludedXsec/F:p0/F:clsu1s/F:clsu2s/F:expectedUpperLimitMinus2Sig/F:expectedUpperLimitPlus1Sig/F:mode/F:fID/C:dodgycov/F:CLs/F"
   return filename, description
 
-def harvesttree(textfile=''):
+def harvesttree(textfile='/n/home13/annwang/ZeroLeptonAnalysis/HistFitterSetup/ZeroLeptonFitter-00-01-13/macros/contourplot/Outputs/36.1ifb/SS_onestepCC/SS_onestepCC_SRJigsawSRG1a_fixSigXSecDown__mlspNE60_harvest_list'):
   filename, description=treedescription()
-  tree = TTree('tree','data from ascii file')
+  tree = ROOT.TTree('tree','data from ascii file')
   if len(textfile)>0:
     nlines = tree.ReadFile(textfile,description)
   elif len(filename)>0:
@@ -23,5 +25,4 @@ def harvesttree(textfile=''):
   tree.SetMarkerSize(0.5)
 
   return tree
-
 

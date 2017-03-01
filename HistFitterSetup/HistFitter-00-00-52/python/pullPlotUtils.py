@@ -387,6 +387,8 @@ def makePullPlot(pickleFilename, regionList, samples, renamedRegions, outputPref
     results2 = []
     for region in mydict["names"]:
         index = mydict["names"].index(region)
+        print index
+        print region
         nbObs = mydict["nobs"][index]
         nbExp = mydict["TOTAL_FITTED_bkg_events"][index]
         nbExpEr = mydict["TOTAL_FITTED_bkg_events_err"][index]
@@ -411,9 +413,13 @@ def makePullPlot(pickleFilename, regionList, samples, renamedRegions, outputPref
         if -0.02 < pull < 0: pull = -0.02 ###ATT: ugly
         if 0 < pull < 0.02:  pull = 0.02 ###ATT: ugly
 
-        if region.find("SR")>=0 and doBlind:
-            nbObs = -100
-            pull = 0
+        # if region.find("SR")>=0:
+        #     nbObs = -100
+        #     pull = 0
+        # Ann trying
+        # if region.find("SR")>=0 and doBlind:
+        #     nbObs = -100
+        #     pull = 0
 
         results1.append((region,pull,nbObs,nbExp,nbExpEr,totEr,nbExpComponents))
 

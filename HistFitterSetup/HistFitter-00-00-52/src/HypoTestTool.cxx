@@ -390,6 +390,27 @@ RooStats::HypoTestTool::SetupHypoTestCalculator(RooWorkspace * w, bool doUL,
     m_logger << kINFO << ">>> Setting up HypoTestCalculator on the workspace <" << w->GetName() << ">" << GEndl;
     m_logger << kINFO << ">>> Setting up HypoTest for : " << (doUL ? "exclusion" : "discovery") << GEndl;
 
+    // AW changed here
+    ROOT::Math::MinimizerOptions::SetDefaultMinimizer("Minuit2","Combined");
+    // ROOT::Math::MinimizerOptions::SetDefaultStrategy(0);
+    // ROOT::Math::MinimizerOptions::SetDefaultTolerance(3);
+
+    RooRealVar* sigvar0 = w->var("mu_SIG");                        
+    sigvar0->setMin(0.00001);     
+    //    sigvar0->setMax(15.);     
+    RooRealVar* sigvarmu = w->var("mu_Multijets");                        
+    sigvarmu->setMin(0.00001);     
+    sigvarmu->setMax(50.);     
+    // the following true for regular fits too
+    RooRealVar* sigvar = w->var("gamma_stat_CRT_cuts_bin_0");                        
+    sigvar->setMin(0.01);     
+    RooRealVar* sigvar1 = w->var("gamma_stat_CRY_cuts_bin_0");                        
+    sigvar1->setMin(0.01);     
+    RooRealVar* sigvar2 = w->var("gamma_stat_CRW_cuts_bin_0");
+    sigvar2->setMin(0.01);                                                                         
+    RooRealVar* sigvar3 = w->var("gamma_stat_SR_cuts_bin_0");
+    sigvar3->setMin(0.01);                                                               
+           
     RooAbsData * data = w->data(dataName); 
     if (!data) { 
         Error("HypoTestTool","Not existing data %s",dataName);

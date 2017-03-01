@@ -201,21 +201,13 @@ if nChunks != 1:
 
 SignalRegions = [
 
-"SR2jl",
-"SR2jm",
-"SR2jt",
-"SR4jt",
-"SR5j",
-"SR6jm",
-"SR6jt",
-
-
 "SRJigsawSRG1a",
 "SRJigsawSRG1b",
 "SRJigsawSRG2a",
 "SRJigsawSRG2b",
 "SRJigsawSRG3a",
 "SRJigsawSRG3b",
+"SRJigsawSRG4",
 
 "SRJigsawSRS1a",
 "SRJigsawSRS1b",
@@ -223,6 +215,7 @@ SignalRegions = [
 "SRJigsawSRS2b",
 "SRJigsawSRS3a",
 "SRJigsawSRS3b",
+"SRJigsawSRS4",
 
 "SRJigsawSRC1",
 "SRJigsawSRC2",
@@ -235,8 +228,8 @@ SignalRegions = [
 for SignalRegion in SignalRegions:
     for subsetPoints in chunks(points, pointsPerCommand):
         # ROOT5 has a tendency to crash if we don't run the -t step seperately, so do that
-        cmd = "HistFitter.py -D allPlots -t -w -f -p -F excl -g grid{0},{1}  -r {2} {3}/analysis/ZeroLepton_Run2_RJigsaw.py".format( grid, ",".join(subsetPoints) , SignalRegion, os.getenv('ZEROLEPTONFITTER')   )
-
+        cmd = "python ../../../HistFitter-00-00-52/scripts/HistFitter.py -t -w -f -p -F excl -g grid{0},{1}  -r {2} {3}/analysis/ZeroLepton_Run2_RJigsaw.py".format( grid, ",".join(subsetPoints) , SignalRegion, os.getenv('ZEROLEPTONFITTER')   )
+        
         # NOTE: I need to become clever enough to recycle histograms for the final discriminating variable.
         # print cmd
         commands.append( (SignalRegion, SignalRegion, cmd) )

@@ -65,14 +65,14 @@ def checkInvalidRegions(ana, VR) :
         if VR == "VRQa" : return True
         if VR == "VRQb" : return True
 
-        if VR == "VRZ"  : return True
+#        if VR == "VRZ"  : return True
         if VR == "VRZa" : return True
         if VR == "VRZb" : return True
 
-        if VR == "VRWa" : return True
+#        if VR == "VRWa" : return True
         if VR == "VRWb" : return True
 
-        if VR == "VRTa" : return True
+#        if VR == "VRTa" : return True
         if VR == "VRTb" : return True
 
     if ("SRG" in ana) or ("SRS" in ana) :
@@ -87,24 +87,13 @@ def main():
 
 
     allAna = sorted(finalChannelsDict.keys())
-    #order per number of events per jet multiplicity
-#    allAna=["SR2jl","SR2jm","SR2jt","SR4jt","SR5j","SR6jm","SR6jt"]
+    for channel in allAna:
+        if ("Common" in channel):
+            print channel
+            allAna.remove(channel)
+    print allAna
     nSR = len(allAna)
     print allAna
-
-    # allVRs = ['VRW',
-    #           'VRT',#:
-    #               'VRQa',#:
-    #               'SR',#:
-    #               'VRTb',#:
-    #               'VRWa',#:
-    #               'VRZca',#:
-    #               'VRTa',#:
-    #               'VRZ',#:
-    #               'VRZb',#:
-    #               'VRWb',#:
-    #               'VRQb',#:
-    #               ]
 
     allVRs = zlFitterConfig.validationRegionsList
     allVRs.remove("VRQ")
@@ -158,19 +147,10 @@ def main():
                     nExpEr="%.1f"%theMap[VR][3]
                 except KeyError :
                     print "missing this VR in the map, setting pull value to - "
-                    pull  = "999"
+                    pull  = "-10"
                     nObs  = "999"
                     nExp  = "999"
                     nExpEr= "999"
-
-                if checkInvalidRegions(channelName, VR) :
-                    print "invalid, setting pulls to 999" , channelName , VR
-                    pull  = "999"
-                    nObs  = "999"
-                    nExp  = "999"
-                    nExpEr= "999"
-
-                print channel, VR, pull
 
                 pullstring = str(pull) if float(pull) < 500 else "N/A"
                 lineForTable+= pullstring+"  "
@@ -178,7 +158,9 @@ def main():
                     lineForTable+=" & "
                 else:
                     lineForTable+="\\\\"
-                bidim.SetBinContent(counterVR,counterAna,float(pull))
+
+                if (float(pull) < 500):
+                    bidim.SetBinContent(counterVR,counterAna,float(pull))
                 labelX=VRNameFct(VR).replace("$","").replace("\\","#")
 #   #            print channel,labelX, nObs,nExp,nExpEr,"============= ",float(nExpEr)/sqrt(float(nExp)+0.0001)
                 bidim.GetXaxis().SetBinLabel(counterVR,labelX)
@@ -197,9 +179,10 @@ def main():
         #print lineForTable
         linesForTable.append("\\hline")
         bidim.GetYaxis().SetBinLabel(counterAna,channelName)
+#        bidim.GetXaxis().LabelsOption("v")
 
-    canvas = TCanvas("canvas","canvas",1000,800)
-    canvas.SetLeftMargin(0.1)
+    canvas = TCanvas("canvas","canvas",1600,1200)
+    canvas.SetLeftMargin(0.15)
     canvas.SetRightMargin(0.2)
     canvas.SetBottomMargin(0.1)
     canvas.SetTopMargin(0.1)
@@ -207,7 +190,24 @@ def main():
     bidim.SetMinimum(-3)
     bidim.Draw("colz")
     gStyle.SetPaintTextFormat("1.1f");
-    bidim.Draw("text,same")
+
+    for ix in range(1,bidim.GetNbinsX()+1):
+        for iy in range(1,bidim.GetNbinsY()+1):
+            text = TLatex()
+            text.SetTextFont(42)
+            text.SetTextSize(0.03)
+            text.SetTextColor(kBlack)
+            text.SetNDC(False)
+            if bidim.GetBinContent(ix,iy)==-10:
+                x=bidim.GetXaxis().GetBinCenter(ix)-0.1
+                y=bidim.GetXaxis().GetBinCenter(iy)-0.1
+                text.DrawLatex(x,y,"-")
+            else:
+                x=bidim.GetXaxis().GetBinCenter(ix)-0.3
+                y=bidim.GetXaxis().GetBinCenter(iy)-0.1
+                content = str(round(bidim.GetBinContent(ix,iy),1))
+                text.DrawLatex(x,y,content)
+#    bidim.Draw("text,same")
 
 
     text = TLatex()

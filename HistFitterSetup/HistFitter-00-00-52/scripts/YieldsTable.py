@@ -139,7 +139,7 @@ def latexfitresults(filename,regionList,sampleList,dataname='obsData',showSum=Fa
     
   nobs_regionList = [ data.sumEntries() for data in regionDatasetList]
   # blinding SR region, even if unblinded
-  nobs_regionList[-1] = -1
+#  nobs_regionList[-1] = -1
 
   """
   if showSum=True calculate the total number of observed events in all regions  

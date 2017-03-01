@@ -20,7 +20,7 @@ def getError(channelName, regionName, sysDict):
 #Diboson
 #######################################
 dibosonFlatSysDict = {}
-dibosonFlatSysDict[("default","default")] = 0.50
+dibosonFlatSysDict[("default","default")] = 0.2
 
 #######################################
 #Z+jets

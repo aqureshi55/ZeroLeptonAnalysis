@@ -30,7 +30,7 @@ def parseCmdLine(args):
 def main():
     config = parseCmdLine(sys.argv[1:])
     
-    scriptname = os.environ['ZEROLEPTONFITTER']+"/analysis/ZeroLepton_Run2.py" #ATT
+    scriptname = os.environ['ZEROLEPTONFITTER']+"/analysis/ZeroLepton_Run2_RJigsaw.py" #ATT
     runList = finalChannelsDict.keys()
 
     option = "-t -w -f "
@@ -53,6 +53,12 @@ def main():
         option += " -z -F excl "  
 
     for ana in runList:
+        if not("SRS1a" in ana):
+            continue
+        # elif not ("SRG1" in ana):
+        #     continue
+        # if ("Common" in ana):
+        #     continue
         log=" >& "+ana+"_Bkg.log"
         if int(config.FitType)==1:
             log=" >& "+ana+"_Disc.log"
@@ -64,7 +70,7 @@ def main():
         if int(config.FitType)!=2 and int(config.FitType)!=3:
             if config.all: 
                 log+="&"
-            cmd= "HistFitter.py "+option+" -r "+ana+" "+scriptname+log        
+            cmd= "python ../HistFitter-00-00-52/scripts/HistFitter.py "+option+" -r "+ana+" "+scriptname+log        
             print "\n",cmd
             if config.run:
                 subprocess.call(cmd, shell=True)

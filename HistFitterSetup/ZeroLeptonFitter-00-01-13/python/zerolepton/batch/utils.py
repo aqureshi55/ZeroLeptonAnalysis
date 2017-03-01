@@ -118,9 +118,11 @@ def submitFile(args, filename, batchConfig):
     else :
         cmdTemplate = string.Template(batchConfig['command'])
         cmd = cmdTemplate.safe_substitute(values)
+    cmd = cmd.replace('"', "")
 
-    print(cmd)
+    print repr(cmd)
     if args.dry_run: return
+#    cmd = str(cmd)
     subprocess.call(cmd, shell=True)
 
 def runBatchCommands(args, outputDir, commands, runMissing=False, forceOverwrite=False):

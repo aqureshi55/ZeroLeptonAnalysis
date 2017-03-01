@@ -22,10 +22,12 @@ auto kappaMapFunction = [](int region){
 
 float gammaCorWeight(int RunNumber, int regionEnum = 0){// std::string region = "Meff") {
   if (RunNumber >=361039 && RunNumber <= 361061+1){
-    if (regionEnum == 1)
-      return 1.668;
-    else
-      return 1.56;
+    if (regionEnum == 1){
+      return 1.50375;
+    }
+    else{
+      return 1.41404;
+    }
   }
   else return 1.0;
 }

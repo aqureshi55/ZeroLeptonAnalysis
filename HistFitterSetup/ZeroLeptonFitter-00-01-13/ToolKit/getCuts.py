@@ -33,17 +33,20 @@ parser.add_option("-a", "--anaShortName", help="specify anaShortName (default SR
 parser.add_option("-r", "--region", help="specify region (default SR)", default = "SR")
 (options, args) = parser.parse_args()
 
+if options.anaShortName=="all":
+    for name,chan in finalChannelsDict.items():
+        print "anaList[\""+name+"\"]=\""+chan.getCutsDict()[options.region]+"\""
+else:
+    cuts=finalChannelsDict[options.anaShortName].getCutsDict()
 
-cuts=finalChannelsDict[options.anaShortName].getCutsDict()
 
 
 
 
+    print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+    print "Cut string for %s in %s" % (options.region, options.anaShortName) 
+    print cuts[options.region]
+    print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
 
-print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
-print "Cut string for %s in %s" % (options.region, options.anaShortName) 
-print cuts[options.region]
-print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
-
-for cut in cuts[options.region].split("&&"):
-    print cut
+    for cut in cuts[options.region].split("&&"):
+        print cut

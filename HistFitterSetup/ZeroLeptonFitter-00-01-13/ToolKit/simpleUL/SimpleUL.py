@@ -6,7 +6,7 @@ from ROOT import kBlack,kWhite,kGray,kRed,kPink,kMagenta,kViolet,kBlue,kAzure,kC
 from configWriter import fitConfig,Measurement,Channel,Sample
 from systematic import Systematic
 from math import sqrt
-
+import time
 from logger import Logger
 
 import os
@@ -16,23 +16,29 @@ import os
 ######################
 
 results = {}
+## key=region name => [exp, expUnc, obs]
 
-# key=region name => [exp, expUnc, obs]
-# results["SR1"] = [13000, 1000, 12315]
-# results["SR2jm"] = [760, 50, 715]
-# results["SR2jt"] = [125, 10, 133]
-# results["SR2jW"] = [2.1, 0.7, 0]
-# results["SR3j"] = [5.0, 1.3, 7]
-# results["SR4jl-"] = [2120, 130, 2169]
-# results["SR4jl"] = [630, 50, 608]
-# results["SR4jm"] = [37, 6, 24]
-# results["SR4jt"] = [2.51, 1.0, 0]
-# results["SR4jW"] = [14, 4, 16]
-# results["SR5j"] = [126, 16, 121]
-# results["SR6jl"] = [111, 15, 121]
-# results["SR6jm"] = [33, 6, 39]
-# results["SR6jt"] = [5.2, 1.5, 5]
-results["SR1"] = [2.8, 2.8*0.27, 2.8]
+# RJigsaw Moriond 2017 results on v115
+results["SRJigsawSRS1a"] = [274, 35, 300] 
+results["SRJigsawSRS1b"] = [190, 22, 221] 
+results["SRJigsawSRS2a"] = [73, 10, 85] 
+results["SRJigsawSRS2b"] = [56, 7, 67] 
+results["SRJigsawSRS3a"] = [40.4, 3.5, 52] 
+results["SRJigsawSRS3b"] = [26.7, 2.0, 32] 
+
+results["SRJigsawSRG1a"] = [46.65, 4.88, 38] 
+results["SRJigsawSRG1b"] = [15.0, 1.8, 13] 
+results["SRJigsawSRG2a"] = [19.9, 2.2, 29] 
+results["SRJigsawSRG2b"] = [6.06, 1.0, 10] 
+results["SRJigsawSRG3a"] = [4.2, 0.8, 8] 
+results["SRJigsawSRG3b"] = [1.3, 0.4, 4] 
+
+results["SRJigsawSRC1"] = [36.8, 3.66, 31] 
+results["SRJigsawSRC2"] = [30.25, 2.96, 25] 
+results["SRJigsawSRC3"] = [20.38, 2.54, 12] 
+results["SRJigsawSRC4"] = [25.95, 3.65, 21] 
+results["SRJigsawSRC5"] = [7.51, 1.56, 8] 
+
 
 ##########################
 
@@ -46,7 +52,6 @@ if len(pickedSRs) == 0:
     log.fatal("No region specified!")    
 
 for SR in pickedSRs:
-    print SR
 
     if SR not in results:
         log.warning("SR %s not found in results dict!")
@@ -62,7 +67,7 @@ for SR in pickedSRs:
     nbkg      =  float(results[SR][0]) # Number of predicted bkg events
     nbkgErr   =  float(results[SR][1]) # (Absolute) Statistical error on bkg estimate
 
-    lumiError = 0.028 	# Relative luminosity uncertainty
+    lumiError = 0.032 	# Relative luminosity uncertainty
 
     ucb = Systematic("ucb", configMgr.weights, 1 + nbkgErr/nbkg, 1 - nbkgErr/nbkg, "user","userOverallSys")
 
@@ -71,14 +76,14 @@ for SR in pickedSRs:
     # Setting the parameters of the hypothesis test
     #configMgr.nTOYs=5000
     configMgr.calculatorType=2 # 2=asymptotic calculator, 0=frequentist calculator
-    configMgr.testStatType=2   # 3=one-sided profile likelihood test statistic (LHC default)
+    configMgr.testStatType=3   # 3=one-sided profile likelihood test statistic (LHC default)
     configMgr.nPoints=20       # number of values scanned of signal-strength for upper-limit determination of signal strength.
 
     ##########################
 
     # Give the analysis a name
     configMgr.analysisName = "SimpleUL_%s" % SR
-    configMgr.outputFileName = "results/%s_Output.root"%configMgr.analysisName
+    configMgr.outputFileName = "results/%s_Output.root" % configMgr.analysisName
 
     # Define cuts
     configMgr.cutsDict["UserRegion"] = "1."
@@ -105,7 +110,7 @@ for SR in pickedSRs:
 
     # Define measurement
     meas = ana.addMeasurement(name="NormalMeasurement",lumi=1.0,lumiErr=lumiError)
-    meas.addPOI("mu_Sig")
+    meas.addPOI("mu_SIG")
     meas.addParamSetting("Lumi",True,1)
 
     # Add the channel

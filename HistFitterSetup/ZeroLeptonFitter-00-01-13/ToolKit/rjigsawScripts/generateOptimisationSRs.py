@@ -125,6 +125,10 @@ from zerolepton.grids.config import GridConfig
 #         if first: print "=> {0}".format(line); first=False
 #         else:     print "   {0}".format(line)
 
+# if args.entire_grid:
+#     print("Overriding points settings - using entire grid")
+#     points = list({"_".join(str(i) for i in x) for x in loadGridPoints(grid)})
+
 # if points == []:
 #     print("Can't run without a grid point!")
 #     sys.exit()
@@ -185,13 +189,13 @@ i=0
 
 SignalRegions = [
 
-"SR2jl",
-"SR2jm",
-"SR2jt",
-"SR4jt",
-"SR5j",
-"SR6jm",
-"SR6jt",
+# "SR2jl",
+# "SR2jm",
+# "SR2jt",
+# "SR4jt",
+# "SR5j",
+# "SR6jm",
+# "SR6jt",
 
 
 "SRJigsawSRG1a",
@@ -200,6 +204,7 @@ SignalRegions = [
 "SRJigsawSRG2b",
 "SRJigsawSRG3a",
 "SRJigsawSRG3b",
+"SRJigsawSRG4", #MOR
 
 "SRJigsawSRS1a",
 "SRJigsawSRS1b",
@@ -207,6 +212,7 @@ SignalRegions = [
 "SRJigsawSRS2b",
 "SRJigsawSRS3a",
 "SRJigsawSRS3b",
+"SRJigsawSRS4", #MOR
 
 "SRJigsawSRC1",
 "SRJigsawSRC2",
@@ -224,7 +230,9 @@ for SignalRegion in SignalRegions:
 
     myCmds = []
 
-    cmd = "HistFitter.py -t -w -d -f  -F bkg  -V  -r {2} {3}/analysis/ZeroLepton_Run2_RJigsaw.py".format( 0,0, SignalRegion, os.getenv('ZEROLEPTONFITTER')   )
+    #cmd = "../../../HistFitter-00-00-52/scripts/HistFitter.py -t -w -d -f  -F bkg  -V  -r {2} {3}/analysis/ZeroLepton_Run2_RJigsaw.py".format( 0,0, SignalRegion, os.getenv('ZEROLEPTONFITTER')   )
+
+    cmd = "../../../HistFitter-00-00-52/scripts/HistFitter.py -t -w -f  -z -F disc -r {2} {3}/analysis/ZeroLepton_Run2_RJigsaw.py".format( 0,0, SignalRegion, os.getenv('ZEROLEPTONFITTER')   )
 
     commands.append( (SignalRegion, SignalRegion, cmd) )
 

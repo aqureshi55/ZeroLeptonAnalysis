@@ -41,8 +41,8 @@ args = parser.parse_args()
 # Can we find a file for the grid?
 if args.grid is not None and args.grid != "":
     print("Attempting autodetection for grid %s" % args.grid)
-
-    globStr = "%s/optimisation-*%s*.json" % (os.getenv('ZEROLEPTONFITTER'), args.grid)
+    #print(os.getenv('ZEROLEPTONFITTER'))
+    globStr = "%s/optimisation/optimisation-*%s*.json" % (os.getenv('ZEROLEPTONFITTER'), args.grid)
     newest = max(glob.iglob(globStr), key=os.path.getctime)
 
     if newest is not None and newest != "":

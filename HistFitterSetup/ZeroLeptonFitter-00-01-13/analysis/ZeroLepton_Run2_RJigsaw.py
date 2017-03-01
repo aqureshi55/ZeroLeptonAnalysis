@@ -289,9 +289,9 @@ if configMgr.readFromTree:
     #data
     # dataFiles.append(INPUTDIR_DATA, "/DataMain_Nov01.root")
     # dataFiles.append(INPUTDIR_DATA+ "/Data_Nov07.root")
-    dataFiles.append(INPUTDIR_DATA+ "/DataMain_data15_13TeV.root")
-    dataFiles.append(INPUTDIR_DATA+ "/DataMain_data16_13TeV.root")
-#    dataFiles.append(INPUTDIR_DATA+ "/DataMain.root")
+#    dataFiles.append(INPUTDIR_DATA+ "/DataMain_data15_13TeV.root")
+#    dataFiles.append(INPUTDIR_DATA+ "/DataMain_data16_13TeV.root")
+    dataFiles.append(INPUTDIR_DATA+ "/DataMain_new.root")
 #    dataFiles.append(INPUTDIR_DATA+ "/DataMain.root")
 #    dataFiles.append(INPUTDIR_DATA+ "/DataMain_311481.root")
 
@@ -306,8 +306,6 @@ if configMgr.readFromTree:
     log.info("gammaFiles = %s" % gammaFiles)
 
 # Tuples of nominal weights
-#weights = ["genWeight", "pileupWeight", "normWeight"]
-# weights = ["eventWeight", "pileupWeight", "normWeight"]
 def anaNameEnum (anaName) :
     if "SRG" in anaName : return 1
     if "SRC" in anaName : return 2
@@ -318,6 +316,7 @@ def anaNameEnum (anaName) :
 weights = channel.commonWeightList
 kappaCorrection = "gammaCorWeight(mcChannelNumber, "+str(anaNameEnum(anaName))+")"
 if zlFitterConfig.applyKappaCorrection:
+    print "KAPPA: ",kappaCorrection
     weights.append(kappaCorrection)
     # weights.append("1./1.6")
 configMgr.weights = weights
@@ -439,7 +438,7 @@ if zlFitterConfig.doSetNormRegion:
 if not zlFitterConfig.usePreComputedTopGeneratorSys:
     topSample.addSystematic(Systematic("generatorTop", "", "_aMcAtNloHerwigpp", "", "tree", "overallNormHistoSysOneSide"))
 if not zlFitterConfig.usePreComputedTopFragmentationSys:
-    #topSample.addSystematic(Systematic("Pythia8Top", "" , "_PowhegPythia8", "" , "tree", "overallNormHistoSysOneSide"))
+    topSample.addSystematic(Systematic("Pythia8Top", "" , "_PowhegPythia8", "" , "tree", "overallNormHistoSysOneSide"))
     topSample.addSystematic(Systematic("HerwigppTop", "", "_PowhegHerwigpp", "", "tree", "overallNormHistoSysOneSide"))
 
 if not zlFitterConfig.usePreComputedTopRadiationSys:
@@ -539,9 +538,9 @@ sysWeight_theoSysSigDown = myreplace(configMgr.weights, ["normWeightDown"], "nor
 theoSysSig = Systematic("SigXSec", configMgr.weights, sysWeight_theoSysSigUp, sysWeight_theoSysSigDown, "weight", "overallSys")
 
 #pileup
-# sysWeight_pileupUp = myreplace(configMgr.weights, ["pileupWeightUp"], "pileupWeight")
-# sysWeight_pileupDown = myreplace(configMgr.weights, ["pileupWeightDown"], "pileupWeight")
-# pileupSys = Systematic("pileUp", configMgr.weights, sysWeight_pileupUp, sysWeight_pileupDown, "weight", "overallSys")
+#sysWeight_pileupUp = myreplace(configMgr.weights, ["pileupWeightUp"], "pileupWeight")
+#sysWeight_pileupDown = myreplace(configMgr.weights, ["pileupWeightDown"], "pileupWeight")
+#pileupSys = Systematic("pileUp", configMgr.weights, sysWeight_pileupUp, sysWeight_pileupDown, "weight", "overallSys")
 
 
 #######################################################################
@@ -644,7 +643,8 @@ for point in allpoints:
     if myFitType == FitType.Exclusion or (myFitType == FitType.Discovery and zlFitterConfig.useSignalInBlindedData==True):
 
         sigSample = Sample(sigSampleName, kRed)
-        sigSample.setFileList([os.path.join(INPUTDIR_SIGNAL, grid+("_fastsim" if grid=="GG_onestepCC" else "")+".root")]) # tentative hack. Will change the file name soon.
+        sigSample.setFileList([os.path.join(INPUTDIR_SIGNAL, grid+".root")]) # 
+#        sigSample.setFileList([os.path.join(INPUTDIR_SIGNAL, grid+("_fastsim" if grid=="GG_onestepCC" else "")+".root")]) # tentative hack. Will change the file name soon.
         sigSample.setTreeName("%s_%s_SRAll" % (gridTreeName, point) )
         sigSample.setNormByTheory()
         sigSample.setNormFactor("mu_SIG", 1, 0., 100.)
@@ -970,26 +970,24 @@ for point in allpoints:
 
 
             for sam in REGION.sampleList:
-
-                # if sam.name == zlFitterConfig.qcdSampleName+"GammaFakes":
-                #     sam.addSystematic(Systematic("FlatDiboson", configMgr.weights, 1.+error, 1-error, "user", "userOverallSys"))
-
                 #signal
                 if sam.name == sigSampleName:
-                    #Needs to add theory uncertainty on signal acceptance for low-dM points
-                    nameSys = "FlatSig"
-                    #sam.addSystematic(Systematic(nameSys, configMgr.weights, 1.+zlFitterConfig.flatErrorSignal, 1-zlFitterConfig.flatErrorSignal, "user", "userOverallSys"))
+                    nameSys = "TheoSig"
+                    deltaM = getDeltaM(sigSampleName)
+                    if deltaM>=0 and deltaM <=50:
+                        errorSig = 6.51*exp(-0.04*deltaM +1.46)*0.01
+                        sam.addSystematic(Systematic(nameSys, configMgr.weights, 1.+errorSig,1-errorSig, "user", "userOverallSys"))
                 #Z background
                 elif sam.name==zlFitterConfig.zSampleName:
                     #generator
                     if zlFitterConfig.usePreComputedZGeneratorSys:
-                        print "adding Z THEO UNCERTAINTIES"
+#                        print "adding Z THEO UNCERTAINTIES"
                         errorGenerator=getError(channel.name,REGION.name.replace("cuts_",""),zTheoSysGeneratorDict)
                         sam.addSystematic(Systematic("GeneratorZ", configMgr.weights, 1.+errorGenerator, 1-errorGenerator, "user", "userOverallSys"))
                     #Kappa
                     if zlFitterConfig.applyKappaCorrection:
-#                        kappaError=0.066 if anaNameEnum(anaName)==3 else 0.080
-                        kappaError = 0.058 #.25 if anaNameEnum(anaName)==2 else 0.07
+                        kappaError = 0.0702839/1.50375 if anaNameEnum(anaName)==1 else 0.0278418/1.41404
+#                        print "KAPPAERROR ", kappaError
                         sam.addSystematic(Systematic("Kappa", configMgr.weights, 1+kappaError, 1-kappaError, "user", "userOverallSys"))
 
 

@@ -19,36 +19,41 @@ parser = OptionParser()
 
 parser.add_option("-a","--asymptotic", default=False, action="store_true", help="asymptotic")
 parser.add_option("-m", "--merge", default=False, action="store_true", help="Merge results")
+parser.add_option("-r", "--region", default="SRJigsawSRC1", help="Region")
 parser.add_option("-o", "--output-dir", default="results/",
                   help="output dir under which files can be found", metavar="DIR")
 (options, args) = parser.parse_args()
 
-#options.output_dir += "/" #to be sure
 options.output_dir = os.path.abspath(options.output_dir)
 
 # loop over analysis and compute UL,p0,...
 for anaName in finalChannelsDict.keys():
+#anaName = options.region
 
-    # names
+# names
     fileName = os.path.join(options.output_dir, "ZL_"+anaName+"_Discovery/Fit__Discovery_combined_NormalMeasurement_model.root")
     outName="UL_%s.tex" % (anaName)
     outNameTMP=outName+".tmp"
 
-    # options    
-    nPoints = 40
+# options    
+    nPoints = 30
     muRange = 100
-    nToys = 3000
+    nToys = 1000
 
-    if "2jm" in anaName:
-        muRange = 120
-    elif "2jt" in anaName:
+    if not("SRS3b" in anaName):
+        continue
+    
+    if ("SRC" in anaName):
         muRange = 40
-    elif "4jt" in anaName:
-        muRange = 40
-    elif "5j" in anaName:
-        muRange = 25
-    elif "6j" in anaName:
-        muRange = 20
+    if ("SRS1a" in anaName):
+        muRange = 200
+    elif ("SRS1b" in anaName):
+        muRange = 100
+    elif ("SRS" in anaName):
+        muRange = 50
+    else:
+        muRange = 60
+    
 
     option = "-N %d -R %d" % (nPoints, muRange)  
     if options.asymptotic:
@@ -57,35 +62,15 @@ for anaName in finalChannelsDict.keys():
         option += " -n %d"%(nToys) 
 
     cmd = "python $HISTFITTER/scripts/UpperLimitTable.py %s -c combined -p mu_SIG -w %s -l %f -o %s" % (option, fileName, lumi, outNameTMP)   
-    #cmd_pval = "HistFitter.py -z -F disc -r %s $ZEROLEPTONFITTER/analysis/ZeroLepton_Run2.py" % ( anaName)
 
     cmd+="  >&"+anaName+"_UL.log &"
-    #cmd_pval+="  >&"+anaName+"_p0.log &"
-        
+
     print cmd
-    #print cmd_pval
         
     if not options.merge:
         subprocess.call(cmd, shell=True)
-        #subprocess.call(cmd_pval, shell=True)        
     else:
         if os.path.exists(outNameTMP): 
-
-            #filename = os.path.join(options.output_dir, "ZL_{0}_Discovery/ZL_{0}_Discovery_Output_fixSigXSecNominal_hypotest.root".format(anaName))
-            #f = ROOT.TFile.Open(filename, "READ")
-            #h = f.Get("discovery_htr_DiscoveryMode_SIG")
-            #pval = "--"
-            #if h and h is not None:
-            #    pval = h.NullPValue()
-            #f.Close()
-            ##discovery_htr_DiscoveryMode_SIG->NullPValue()
-
-            #print pval
-
-            ## replace the last column with the p-value
-            #awkCmd = 'BEGIN {FS="&";OFS="&"} $5 != "nan" {print $1,$3,$2,$4, " %.3f \\\\\\\\"}' % pval
-            #cmd = "cat {0} | grep combined | grep -v label | sed -e 's/combined/{1}/g' | awk '{3}' > {2}".format(outNameTMP, anaName, outName, awkCmd)
-            #print cmd
 
             cmd="cat "+outNameTMP+"| sed -e 's/combined/"+anaName+"/g' > "+outName
             subprocess.call(cmd, shell=True)

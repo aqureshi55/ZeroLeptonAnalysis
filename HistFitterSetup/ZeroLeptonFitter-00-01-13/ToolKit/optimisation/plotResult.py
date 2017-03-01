@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env/python
 
 # Tool to plot optimisation results
 # Note: part of the functionality herein needs to go to ContourUtils

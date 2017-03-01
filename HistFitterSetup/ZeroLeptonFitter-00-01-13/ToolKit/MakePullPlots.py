@@ -331,8 +331,8 @@ def main(zlFitterConfig):
             regionList.remove("VRQc")
             regionList.remove("VRZc")
             regionList.remove("VRZca")
-        if ("SRS" in anaName):
-            regionList.remove("VRT")
+#        if ("SRS" in anaName):
+#            regionList.remove("VRT")
 
         print "Printing regionList"
         print regionList

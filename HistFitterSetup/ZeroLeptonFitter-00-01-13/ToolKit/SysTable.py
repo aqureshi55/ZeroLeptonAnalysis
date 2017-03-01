@@ -432,7 +432,7 @@ def latexfitresults_method2(filename,resultname='RooExpandedFitResult_afterFit',
   pick up channel category (RooCategory) from workspace
   """
   regionCat = w.obj("channelCat")
-  data_set.table(regionCat).Print("v");
+#  data_set.table(regionCat).Print("v");
 
   """
   find full (long) name list of region (i.e. short=SR3J, long=SR3J_meffInc30_JVF25pt50)
