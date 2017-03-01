@@ -3,6 +3,17 @@ import os
 import sys
 import time
 
+def getDeltaM(sigName):
+    deltaM = -1
+    if sigName.find("direct")>=0:
+        vec=sigName.split("_")
+        deltaM=abs(float(vec[2])-float(vec[3]))
+    elif sigName.find("onestep")>=0:
+        vec=sigName.split("_")
+        deltaM=abs(float(vec[2])-float(vec[4]))
+    return deltaM
+
+
 def myreplace(l1, l2, element):
     idx = l1.index(element)
     if idx >= 0:

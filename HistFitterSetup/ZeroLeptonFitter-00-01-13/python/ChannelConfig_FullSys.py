@@ -153,8 +153,8 @@ class ChannelConfig:
         self.optimisationRegion = False
 
         # self.commonWeightList = ["pileupWeight", "normWeight", "genWeight"] # Note: eventweight has been moved to sysweight
-        self.commonWeightList = ["1000.","normWeight", "eventWeight"] # Note: eventweight has been moved to sysweight
-        #self.commonWeightList = ["1000.","pileupWeight","normWeight", "eventWeight"] # Note: eventweight has been moved to sysweight
+        #self.commonWeightList = ["1000.","normWeight", "eventWeight"] # Note: eventweight has been moved to sysweight
+        self.commonWeightList = ["1000.","pileupWeight","normWeight", "eventWeight"] # Note: eventweight has been moved to sysweight
 
 #        self.commonWeightList = ["1000.","normWeight", "eventWeight", "WZweight"] # Note: eventweight has been moved to sysweight
 

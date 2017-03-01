@@ -306,6 +306,8 @@ if configMgr.readFromTree:
     log.info("gammaFiles = %s" % gammaFiles)
 
 # Tuples of nominal weights
+#weights = ["genWeight", "pileupWeight", "normWeight"]
+# weights = ["eventWeight", "pileupWeight", "normWeight"]
 def anaNameEnum (anaName) :
     if "SRG" in anaName : return 1
     if "SRC" in anaName : return 2
@@ -389,7 +391,7 @@ if nJets > 0 and nJets < len(zlFitterConfig.qcdWeightList)+1:
     if zlFitterConfig.useDDQCDsample:#normWeight is 0 => remove it
         qcdSample.removeWeight("normWeight")
         qcdSample.removeWeight("eventWeight")
-#        qcdSample.removeWeight("pileupWeight")
+        qcdSample.removeWeight("pileupWeight")
         qcdSample.removeWeight("1000.")
         qcdSample.removeWeight(kappaCorrection)
         qcdSample.addWeight("0.01/1.7")
@@ -538,9 +540,9 @@ sysWeight_theoSysSigDown = myreplace(configMgr.weights, ["normWeightDown"], "nor
 theoSysSig = Systematic("SigXSec", configMgr.weights, sysWeight_theoSysSigUp, sysWeight_theoSysSigDown, "weight", "overallSys")
 
 #pileup
-#sysWeight_pileupUp = myreplace(configMgr.weights, ["pileupWeightUp"], "pileupWeight")
-#sysWeight_pileupDown = myreplace(configMgr.weights, ["pileupWeightDown"], "pileupWeight")
-#pileupSys = Systematic("pileUp", configMgr.weights, sysWeight_pileupUp, sysWeight_pileupDown, "weight", "overallSys")
+sysWeight_pileupUp = myreplace(configMgr.weights, ["pileupWeightUp"], "pileupWeight")
+sysWeight_pileupDown = myreplace(configMgr.weights, ["pileupWeightDown"], "pileupWeight")
+pileupSys = Systematic("pileUp", configMgr.weights, sysWeight_pileupUp, sysWeight_pileupDown, "weight", "overallSys")
 
 
 #######################################################################
@@ -633,7 +635,7 @@ for point in allpoints:
     # #-------------------------------------------------
     # # add Systematics
     # #-------------------------------------------------
-#    myFitConfig.addSystematic(pileupSys)
+    myFitConfig.addSystematic(pileupSys)
 
     #-------------------------------------------------
     # Signal sample

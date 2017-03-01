@@ -81,7 +81,7 @@ class ZLFitterConfig:
 
         # Apply a user-defined error to the background and signal errors? (Useful if setting everything to MC pred)
         self.usePrecomputedError = True
-        self.flatErrorSignal=0.0  #this number is only used for the signal, see TheoUncertainties.py for the background
+#        self.flatErrorSignal=0.0  #this number is only used for the signal, see TheoUncertainties.py for the background
         self.usePreComputedWGeneratorSys=True
         self.usePreComputedTopGeneratorSys=False
         self.usePreComputedTopFragmentationSys=False
@@ -126,8 +126,10 @@ class ZLFitterConfig:
 #        self.luminosity = 13.28 #22.070 # 2.674#unit is fb-1
 #        self.luminosityEr = 0.029 # style the run1 error ####################
 
-        self.luminosity = 36.47016 #22.070 # 2.674#unit is fb-1
-        self.luminosityEr = 0.041 # style the run1 error ####################
+        # self.luminosity = 36.47016
+        # self.luminosityEr = 0.041
+        self.luminosity = 36.07456 #22.070 # 2.674#unit is fb-1
+        self.luminosityEr = 0.032 # style the run1 error ####################
 
         ##############################################
         # samples
@@ -190,9 +192,9 @@ class ZLFitterConfig:
     def getSampleColor(self,sample):
         if sample == self.topSampleName:         return ROOT.kGreen-9
         if sample == self.wSampleName:       return ROOT.kAzure - 4
-        if sample == self.zSampleName:       return ROOT.kBlue + 3
-        if sample == self.qcdSampleName:   return ROOT.kOrange
         if sample == self.gammaSampleName:   return ROOT.kYellow
+        if sample == self.zSampleName:       return ROOT.kOrange - 4
+        if sample == self.qcdSampleName:   return ROOT.kBlue + 3
         if sample == self.dibosonSampleName:     return ROOT.kPink-4#ROOT.kRed + 3
         return 1
 
