@@ -46,11 +46,10 @@ from ZLFitterConfig import *
 
 # CHECK:
 #INPUTDIR="%s/results" % (os.getenv("ZEROLEPTONFITTER"))
-#INPUTDIR="%s/optimisation/optimisation-GG_onestepCC-20170218-224212/results" % (os.getenv("ZEROLEPTONFITTER"))
-INPUTDIR="%s/optimisation/optimisation-SS_onestepCC-20170219-002955/results" % (os.getenv("ZEROLEPTONFITTER"))
-#INPUTDIR="%s/optimisation/optimisation-GG_direct-20170214-190428/results" % (os.getenv("ZEROLEPTONFITTER"))
-
-#INPUTDIR="%s/optimisation/optimisation-SS_direct-20170214-124632/results" % (os.getenv("ZEROLEPTONFITTER"))
+#INPUTDIR="%s/optimisation/optimisation-SS_onestepCC-20170424-014457/results" % (os.getenv("ZEROLEPTONFITTER"))
+#INPUTDIR="%s/optimisation/optimisation-GG_onestepCC-20170424-014427/results" % (os.getenv("ZEROLEPTONFITTER"))
+INPUTDIR="%s/optimisation/optimisation-SS_direct-20170424-014303/results" % (os.getenv("ZEROLEPTONFITTER"))
+#INPUTDIR="%s/optimisation/optimisation-GG_direct-20170424-014154/results" % (os.getenv("ZEROLEPTONFITTER"))
 
 # OUTPUTDIR is where the combination of these using hadd will go, as well as 
 #           all the list files for the contours, the histograms and the plots
@@ -248,6 +247,7 @@ def MergeFiles(config):
         # Now, split filenames into UL files and each xs of hypotest files
         for filename in thisAnaFilenames:
             # get upperlimit files
+#            print "SOMETHING", (filename.find("_60_")), filename
             if filename.find("upperlimit") != -1:
                 thisULFilenames.append(filename)
             # get hypotest files
@@ -375,7 +375,7 @@ def MakeContours(config):
             
             # Format of the hypotests, normally follows e.g. hypo_<grid>_2000_1000 
             # default : used in GG/SS_direct ..
-            format     = "hypo_"+config.grid+"_%f_%f";
+            format     = "hypo_"+config.grid+"_%f_%f;1";
             interpretation = "m0:m12";            
             
             if config.grid.find("SS_onestepCC")!=-1:
@@ -504,7 +504,8 @@ def Oring(config):
     # For all xsecs, merge on best selectpar (normally expected CLs)
     for xsecStr in allXS:
         myMap = {}
-
+        myNomMap = {}
+        myChosenAna = {}
         # skip when xsec != Nominal in discovery mode
         if config.discovery and xsecStr != "Nominal":
             continue;
@@ -574,6 +575,8 @@ def Oring(config):
 
             filename = config.outputDir+config.outputName+"_"+ana+"_fixSigXSec"+xsecStr+listSuffix
             print filename
+            nomfilename = config.outputDir+config.outputName+"_"+ana+"_fixSigXSecNominal"+listSuffix
+            print nomfilename
             infoline="%i : %s\n"%(indx+1,ana)
             file_info.write(infoline)
             if not os.path.exists(filename):
@@ -581,7 +584,11 @@ def Oring(config):
                 continue;
             
             infile = open(filename,'r')
-            for line in infile.readlines():
+            infilelines = infile.readlines()
+            nomfile = open(nomfilename,'r')
+            nomfilelines = nomfile.readlines()
+
+            for i, line in enumerate(nomfilelines):
                 vals = line.strip().split(' ')
                 if len(allpar) != len(vals): 
                     print 'PRB!!!!!!!!!!!!!!!!!!!!'
@@ -594,7 +601,7 @@ def Oring(config):
                 par1 = float( vals[allpar.index(par1_s+"/F")])
                 par2 = float( vals[allpar.index(par2_s+"/F")])
                 key = "%d_%d" % (par1, par2)
-                
+
                 if config.grid.find("GG_onestepCC")!=-1: 
                     par3 = float( vals[allpar.index(par3_s+"/F")])
                     key += "_%d" % par3
@@ -691,16 +698,146 @@ def Oring(config):
                     key = (par1,par2,par3)
                     pass;
                 
-                if key not in myMap.keys():
-                    myMap[key] = [pval,newline]
+                if key not in myNomMap.keys():
+                    myNomMap[key] = [pval,newline]
+                    myChosenAna[key] = ana
                 else:
-                    if pval < myMap[key][0] and pval>=0:
-                        print "DEBUG: %s found new best value - selectpar=%.2e < previous=%e for %s" % (ana, pval, myMap[key][0], key)
-                        myMap[key][0] = pval
-                        myMap[key][1] = newline
+                    if pval < myNomMap[key][0] and pval>=0 and (key != (1000.0, 500.0) or ana != "SRJigsawSRS2a"):
+                        print "DEBUG: %s found new best value - selectpar=%.2e < previous=%e for %s" % (ana, pval, myNomMap[key][0], key)
+                        myNomMap[key][0] = pval
+                        myNomMap[key][1] = newline
+                        myChosenAna[key] = ana
                         pass;
                     pass;
                 pass;
+            nomfile.close()
+
+            for i, line in enumerate(infilelines):
+                vals = line.strip().split(' ')
+                if len(allpar) != len(vals): 
+                    print 'PRB!!!!!!!!!!!!!!!!!!!!'
+                    print "summary file says %d components; file has %d per line" % (len(allpar),len(vals))
+                    continue;
+                
+                vals[allpar.index("fID/C")]=(indx+1)
+ 
+                pval = float( vals[allpar.index(selectpar+"/F")])
+                par1 = float( vals[allpar.index(par1_s+"/F")])
+                par2 = float( vals[allpar.index(par2_s+"/F")])
+                key = "%d_%d" % (par1, par2)
+
+                if config.grid.find("GG_onestepCC")!=-1: 
+                    par3 = float( vals[allpar.index(par3_s+"/F")])
+                    key += "_%d" % par3
+                    pass;
+                if config.grid.find("SS_onestepCC")!=-1: 
+                    par3 = float( vals[allpar.index(par3_s+"/F")])
+                    key += "_%d" % par3
+                    pass;
+                if config.grid.find("SM_GG_N2")!=-1: 
+                    par3 = float( vals[allpar.index(par3_s+"/F")])
+                    key += "_%d" % par3
+                    pass;
+                if config.grid.find("GG_onestep_mlsp60")!=-1: 
+                    par3 = float( vals[allpar.index(par3_s+"/F")])
+                    key += "_%d" % par3
+                    pass;
+           
+                #print "DEBUG: %s selectpar=%.2e for %s" % (ana, pval, key)
+                # ignore negative pvalue
+                if pval < 0:
+                    print "INFO: %s removing negative selectpar (%s = %.2e) for %s" % (ana, selectpar, pval, key)
+                    continue;
+                # ignore expectedUpperLimit < 0.00001 
+                if selectpar == "expectedUpperLimit" and pval < 0.00001:
+                    print "INFO: %s removing %s < 0.00001 for %s" % (ana, selectpar, key)
+                    continue;
+                # 110 is 20 times our default step -> this is almost certainly a bug
+                if selectpar == "expectedUpperLimit" and pval == 110.0:
+                    print "INFO: %s removing expUL==110.0 for %s" % (ana, key)
+                    continue;
+                # if -1sig, -2sig == 0 and +1sig, 2sig == 100 -> almost certainly a bug too
+                if selectpar == "expectedUpperLimit" and float(vals[allpar.index("expectedUpperLimitMinus1Sig")]) == 0.0 and float(vals[allpar.index("expectedUpperLimitMinus2Sig")]) == 0.0 and float(vals[allpar.index("expectedUpperLimitPlus1Sig")]) == 100.0 and float(vals[allpar.index("expectedUpperLimitPlus2Sig")]) == 100.0:
+                    print "INFO: %s removing point %s with expULMinus1Sig == expULMinus2Sig == 0 and expULPlus1Sig == expULPlus2Sig == 100" % (ana, key)
+                    continue;
+                # ignore observed upperLimit=0 when merging on UL
+                if selectpar == "expectedUpperLimit" and float(vals[allpar.index("upperLimit")]) == 0.0:
+                    print "INFO: %s removing obsUL=0.0 for %s" % (ana, key)
+                    continue;
+
+                # throw away points with CLsexp > 0.99 and UL < 1.0 and CLs=-1 and UL<1 when merging on UL                  
+                CLsExp = float( vals[allpar.index("CLsexp/F")])
+                if selectpar == "expectedUpperLimit" and pval < 1.0 and (CLsExp>0.99 or CLsExp<0) and float( vals[allpar.index("upperLimit")])<1:                   
+                    if CLsExp>0.99: print "INFO: %s replacing CLsexp with 0.01 since UL < 1.0  and CLsexp=1 for %s" % (ana, key)
+                    elif CLsExp<0: print "INFO: %s replacing CLsexp with 0.01 since UL < 1.0  and CLsexp=-1 for %s" % (ana, key)
+                    vals[allpar.index("CLsexp/F")] = str(0.01)
+                    vals[allpar.index("CLs/F")] = str(0.01)
+                    vals[allpar.index("clsu1s/F")] = str(0.01)
+                    vals[allpar.index("clsd1s/F")] = str(0.01)
+                    vals[allpar.index("p1/F")] = str(0.01)
+
+                    pass;
+                 
+                newline=""
+                #print vals;
+                for val in vals:
+                    newline += (str)(val)+" "
+                    pass;
+                newline = newline.rstrip(" ")
+                newline += "\n"
+
+                # float strings -> so make them float, then an int to throw away .0000 and then to bool
+                failedcov =  bool(int(float(vals[allpar.index("failedcov/F")])))  # Mediocre cov matrix quality
+                covqual = int(float(vals[allpar.index("covqual/F")]))             # covqual
+                failedfit = bool(int(float(vals[allpar.index("failedfit/F")])))   # Fit failure
+                failedp0 = bool(int(float(vals[allpar.index("failedp0/F")])))     # Base p0 ~ 0.5 (this can reject good fits)!
+                fitstatus = bool(int(float(vals[allpar.index("fitstatus/F")])))   # Fit status from Minuit
+                nofit = bool(int(float(vals[allpar.index("nofit/F")])))           # Whether there's a fit present
+                # ignore some checker
+                """
+                # ignore failed fit
+                if failedfit:
+                    print "INFO: %s removing failedfit=true for %s" % (ana, key)
+                    continue
+                # ignore bad mediocre cov matrix quality
+                if failedcov:
+                    print "INFO: %s removing failedcov=true for %s" % (ana, key)
+                # ignore if covqual<3 & covqual!=-1
+                if covqual < 3 and covqual != -1:
+                    print "INFO: %s removing check if (covqual<3 and covqual!=-1) for %s (found covqual=%d)" % (ana, key, covqual)
+                    continue
+                """
+    
+                key = (par1,par2)
+                if config.grid.find("GG_onestepCC")!=-1: 
+                    key = (par1,par2,par3)
+                    pass;
+                if config.grid.find("SS_onestepCC")!=-1: 
+                    key = (par1,par2,par3)
+                    pass;
+                if config.grid.find("SM_GG_N2")!=-1: 
+                    key = (par1,par2,par3)
+                    pass;
+                if config.grid.find("GG_onestep_mlsp60")!=-1: 
+                    key = (par1,par2,par3)
+                    pass;
+                if key in myChosenAna.keys():
+                    if ana == myChosenAna[key]:
+#                    print "DEBUG: %s found new best value - selectpar=%.2e < previous=%e for %s" % (ana, pval, myMap[key][0], key)
+                        myMap[key]= [pval,newline]
+                        pass;
+                    pass;
+                pass;
+                # if key not in myMap.keys():
+                #     myMap[key] = [pval,newline]
+                # else:
+                #     if pval < myMap[key][0] and pval>=0 and (key != (1000.0, 500.0) or ana != "SRJigsawSRS2a"):
+                #         print "DEBUG: %s found new best value - selectpar=%.2e < previous=%e for %s" % (ana, pval, myMap[key][0], key)
+                #         myMap[key][0] = pval
+                #         myMap[key][1] = newline
+                #         pass;
+                #     pass;
+                # pass;
             infile.close()
 
         #print myMap
