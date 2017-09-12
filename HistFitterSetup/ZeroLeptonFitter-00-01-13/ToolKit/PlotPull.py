@@ -112,7 +112,8 @@ def main():
     linesForTable.append("\\hline")
 
     bidim = TH2F("bidim","bidim",len(allVRs),0,len(allVRs),len(allAna),0,len(allAna))
-    bidim.GetZaxis().SetTitle("(n_{obs}-n_{pred}) / #sigma_{tot}");
+    bidim.GetZaxis().SetTitle("(n_{obs}-n_{pred}) / #sigma");
+#    bidim.GetZaxis().SetTitle("(n_{obs}-n_{pred}) / #sigma_{tot}");
 
     ## Get list of mu parameters (present in all SRs)
     counterAna=0
@@ -164,6 +165,7 @@ def main():
                 labelX=VRNameFct(VR).replace("$","").replace("\\","#")
 #   #            print channel,labelX, nObs,nExp,nExpEr,"============= ",float(nExpEr)/sqrt(float(nExp)+0.0001)
                 bidim.GetXaxis().SetBinLabel(counterVR,labelX)
+                bidim.GetXaxis().LabelsOption("v")
                 if VR in allVRsForChi2:
                     #chi2+=theMap[VR]*theMap[VR]
                     pull2=(float(nObs)-float(nExp))/PoissonError(float(nExp))
@@ -184,7 +186,7 @@ def main():
     canvas = TCanvas("canvas","canvas",1600,1200)
     canvas.SetLeftMargin(0.15)
     canvas.SetRightMargin(0.2)
-    canvas.SetBottomMargin(0.1)
+    canvas.SetBottomMargin(0.15)
     canvas.SetTopMargin(0.1)
     bidim.SetMaximum(3)
     bidim.SetMinimum(-3)
@@ -221,7 +223,7 @@ def main():
     text2.SetTextSize(0.05);
     text2.SetTextColor(kBlack);
     text2.SetNDC(True);
-    text2.DrawLatex(0.22,0.93,"Internal");
+#    text2.DrawLatex(0.22,0.93,"Internal");
 
 
 

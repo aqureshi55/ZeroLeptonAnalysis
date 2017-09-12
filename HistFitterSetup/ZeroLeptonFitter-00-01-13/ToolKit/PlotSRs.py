@@ -77,14 +77,6 @@ def main():
     dNP = {}
     hNP = {}
 
-    # labels = {}
-    # labels["Top"] = "ttbar(+EW) & single top"
-    # labels["Wjets"] = "W+jets"
-    # labels["Zjets"] = "Z+jets"
-    # labels["Multijets"] = "Multijet"
-    # labels["GAMMA"] = "Gamma"
-    # labels["Diboson"] = "Diboson"
-
     colors={}
     colors["Top"]=ROOT.kGreen-9
     colors["Wjets"]=ROOT.kAzure-4
@@ -100,14 +92,20 @@ def main():
 
 
 
-
-
-
-
+    print "REGIONNAME", REGIONNAME
     allAna=sorted(finalChannelsDict.keys())
-    for channel in allAna:
+    for channel in finalChannelsDict.keys():
+        print "Channel",channel
         if ("Common" in channel):
-            print channel
+             print "Removed", channel
+             allAna.remove(channel)
+        elif ("c" in REGIONNAME) and (("SRS" in channel) or ("SRG" in channel)):
+            print "Removed",channel
+            allAna.remove(channel)
+        elif (("VRZa" in REGIONNAME) or ("VRZb" in REGIONNAME)
+              or ("VRWb" in REGIONNAME) or ("VRTb" in REGIONNAME)
+              or ("VRQa" in REGIONNAME) or ("VRQb" in REGIONNAME)) and ("SRC" in channel):
+            print "Removed",channel
             allAna.remove(channel)
     print allAna
     nSR=len(allAna)
@@ -119,7 +117,7 @@ def main():
         hist_data.GetXaxis().SetTitle("RJR Signal Region")
     else:
         print "=== ",REGIONNAME,niceName(REGIONNAME)
-        hist_data.GetXaxis().SetTitle(niceName(REGIONNAME))
+        hist_data.GetXaxis().SetTitle("RJR-"+niceName(REGIONNAME))
 #    hist_data.GetXaxis().LabelsOption("v")
     hist_data.GetYaxis().SetTitleOffset(0.85)
     hist_dataClone=hist_data.Clone()
@@ -162,6 +160,9 @@ def main():
         try:
             index=theMap["names"].index(REGIONNAME+"_cuts")
         except:
+            # allAna.remove(channel)
+            # print "Removed", channel
+            # nSR = nSR-1
             continue
 
 
@@ -288,7 +289,7 @@ def main():
     text2.SetTextSize(0.05);
     text2.SetTextColor(kBlack);
     text2.SetNDC(True);
-    #text2.DrawLatex(0.23,0.79,"Internal");
+#    text2.DrawLatex(0.23,0.79,"Internal");
 
 
     ###############
@@ -404,8 +405,9 @@ def main():
 
 
     leg1.Draw()
-    text.DrawLatex(0.38,0.85,"#bf{#it{ATLAS}} Internal")
-    #text.DrawLatex(0.477,0.85,"#bf{#it{ATLAS}} Preliminary")
+#    text.DrawLatex(0.38,0.85,"#bf{#it{ATLAS}} Internal")
+#    text.DrawLatex(0.38,0.85,"#bf{#it{ATLAS}} Preliminary")
+    text.DrawLatex(0.38,0.85,"#bf{#it{ATLAS}}")
     text.DrawLatex(0.38,0.75,"#sqrt{s}=13TeV, "+str(round(zlFitterConfig.luminosity,1))+" fb^{-1}");
 
 
