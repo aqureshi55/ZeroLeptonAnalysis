@@ -392,15 +392,23 @@ RooStats::HypoTestTool::SetupHypoTestCalculator(RooWorkspace * w, bool doUL,
 
     // AW changed here
     ROOT::Math::MinimizerOptions::SetDefaultMinimizer("Minuit2","Combined");
-    // ROOT::Math::MinimizerOptions::SetDefaultStrategy(0);
-    // ROOT::Math::MinimizerOptions::SetDefaultTolerance(3);
+    // used to be commented out
+    ROOT::Math::MinimizerOptions::SetDefaultStrategy(0);
+    //    ROOT::Math::MinimizerOptions::SetDefaultTolerance(3);
 
     RooRealVar* sigvar0 = w->var("mu_SIG");                        
-    sigvar0->setMin(0.00001);     
+    //sigvar0->setMin(0.00001);     
     //    sigvar0->setMax(15.);     
     RooRealVar* sigvarmu = w->var("mu_Multijets");                        
+    //sigvarmu->setMin(0.001);     
     sigvarmu->setMin(0.00001);     
-    sigvarmu->setMax(50.);     
+    sigvarmu->setMax(2.);     
+    RooRealVar* sigvaralpha = w->var("alpha_generatorTop");                        
+    sigvaralpha->setMin(-3.);     
+    sigvaralpha->setMax(3.);     
+    RooRealVar* sigvarh = w->var("alpha_HerwigppTop");                        
+    sigvarh->setMin(-3.);     
+    sigvarh->setMax(3.);     
     // the following true for regular fits too
     RooRealVar* sigvar = w->var("gamma_stat_CRT_cuts_bin_0");                        
     sigvar->setMin(0.01);     
