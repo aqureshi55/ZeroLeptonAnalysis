@@ -153,8 +153,8 @@ class ChannelConfig:
         self.optimisationRegion = False
 
         # self.commonWeightList = ["pileupWeight", "normWeight", "genWeight"] # Note: eventweight has been moved to sysweight
-        self.commonWeightList = ["1000.","normWeight", "eventWeight"] # Note: eventweight has been moved to sysweight
-        #self.commonWeightList = ["1000.","pileupWeight","normWeight", "eventWeight"] # Note: eventweight has been moved to sysweight
+#        self.commonWeightList = ["1000.","normWeight", "eventWeight"] # Note: eventweight has been moved to sysweight
+        self.commonWeightList = ["1000.","pileupWeight","normWeight", "eventWeight"] # Note: eventweight has been moved to sysweight
 
 #        self.commonWeightList = ["1000.","normWeight", "eventWeight", "WZweight"] # Note: eventweight has been moved to sysweight
 
@@ -712,11 +712,15 @@ class ChannelConfig:
 
                     if finalCutString:
                         cutList.append(finalCutString)
-                if ((reg is "CRQ") or (reg is "VRQa") or (reg is "VRQb")) and \
+                if ((reg is "CRQ")) and \
                         not ("SRJigsawSRC" in self.name) and not ("SRJigsawSRG" in self.name):
                     cutList.append("fabs(cosP) >= 0.95")
                             #print finalCutString
                             #print regionName, "cutlist", cutList
+
+                # unphysical pileup event
+                # if ((reg is "CRT")) and ("SRJigsawSRG3" in self.name or "SRJigsawSRG4" in self.name):
+                #     cutList.append("!(EventNumber==2691109 && mcChannelNumber==410100)")
 
     def Print(self, printLevel=2):
         print "##################################################"
