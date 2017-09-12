@@ -65,6 +65,7 @@ modeMap = {"discovery": "-z", "exclusion" : "-p", "exclusionUL" : "-p -l", "all"
 grid = args.grid
 points = args.point
 mode = args.mode
+print mode
 outputSuffix = args.outputSuffix
 pointsPerCommand = args.pointsPerCommand
 
@@ -77,81 +78,6 @@ if not mode in modeMap:
     sys.exit()
 
 from zerolepton.grids.config import GridConfig
-# discovery = False
-# if mode == discovery:
-#     discovery = True
-# gridConfig = GridConfig(grid, discovery)
-
-# if (points == [] or points[0] == "") and not args.entire_grid:
-#     print("Attempting to find optimisation points in grids.cfg")
-
-#     pointDict = []#loadGridPoints(grid)
-
-#     # dict of "m0 -> 0", "m12 -> 1" like items
-#     interpretation_idx = {item: i for i, item in enumerate(gridConfig.interpretation.split(":"))}
-
-#     # sanity check
-#     for c in gridConfig.optimisation_cuts:
-#         if "-" in c.key:
-#             (key1, key2) = c.key.split("-")
-#             keys = [key1, key2]
-#         else:
-#             keys = [c.key]
-
-#         for k in keys:
-#             if k not in interpretation_idx:
-#                 print(colors.BOLD + colors.FAIL + "FATAL: unknown variable {0} used in optimisation string - check settings/grids.cfg!".format(k) + colors.ENDC)
-#                 sys.exit()
-
-#     for p in pointDict:
-#         # now test if it passes the cuts
-#         for c in gridConfig.optimisation_cuts:
-#             if "-" in c.key:
-#                 (idx1, idx2) = [interpretation_idx[i] for i in c.key.split("-")]
-#                 #print idx1, idx2, c.value
-#                 if p[idx1] - p[idx2] == c.value:
-#                     points.append("_".join(str(i) for i in p))
-#                     break
-#             else:
-#                 # now we have only a normal key left
-#                 if p[interpretation_idx[c.key]] == c.value:
-#                     points.append("_".join(str(i) for i in p))
-#                     break
-
-#     print(colors.OKGREEN + "=> Loaded {0} optimisation points based on your cuts".format(len(points)) + colors.ENDC)
-
-#     first = True
-#     for line in textwrap.wrap(", ".join(points), 80):
-#         if first: print "=> {0}".format(line); first=False
-#         else:     print "   {0}".format(line)
-
-# if args.entire_grid:
-#     print("Overriding points settings - using entire grid")
-#     points = list({"_".join(str(i) for i in x) for x in loadGridPoints(grid)})
-
-# if points == []:
-#     print("Can't run without a grid point!")
-#     sys.exit()
-
-# check whethe these points exist
-# if not os.path.exists(gridConfig.filename):
-#     print("Input file {0} does not exist - skipping existence of check whether points exist in ntuple".format(gridConfig.filename))
-# else:
-#     print("Before filtering: {0:d} points".format(len(points)))
-#     f = ROOT.TFile.Open(gridConfig.filename)
-#     if f:
-#         filteredPoints = [p for p in points if f.GetListOfKeys().Contains("{0}_{1}_SRAll".format(grid, p))]
-#         removedPoints = list(set(points) - set(filteredPoints))
-#         points = filteredPoints
-#         f.Close()
-#     print("After filtering: {0:d} points".format(len(points)))
-
-#     if len(removedPoints) > 0:
-#         print "="*80
-#         print(colors.BOLD + colors.MAJORWARNING + "WARNING: The following points were removed:" + colors.ENDC)
-#         for line in textwrap.wrap(", ".join(removedPoints), 80):
-#             print "   {0}".format(line)
-#         print "="*80
 
 # build a dictionary out of the cuts
 cuts = vars(args)
@@ -170,33 +96,10 @@ cuts.pop('pointsPerCommand', None)
 commands = []
 cutStrings = set()
 i = 0
-
-# nChunks = int(math.ceil(float(len(points)) / pointsPerCommand))
-# prevN = pointsPerCommand
-# # Now re=calcultate to make each job equally long
-# if nChunks != 1:
-#     pointsPerCommand = int(math.ceil( float(len(points))/nChunks))
-#     nChunks = int(math.ceil(float(len(points)) / pointsPerCommand))
-#     if prevN != pointsPerCommand:
-#         print(colors.OKBLUE + "Redefined number of points per command to {0:d} to make each job equally long".format(pointsPerCommand))
-#     print(colors.OKBLUE + "Splitting {0} points into {1:d} chunks to make jobs".format(len(points), nChunks ) + colors.ENDC)
-
 nChunks = 1
 
 
-
-i=0
-
 SignalRegions = [
-
-# "SR2jl",
-# "SR2jm",
-# "SR2jt",
-# "SR4jt",
-# "SR5j",
-# "SR6jm",
-# "SR6jt",
-
 
 "SRJigsawSRG1a",
 "SRJigsawSRG1b",
@@ -230,9 +133,10 @@ for SignalRegion in SignalRegions:
 
     myCmds = []
 
-    #cmd = "../../../HistFitter-00-00-52/scripts/HistFitter.py -t -w -d -f  -F bkg  -V  -r {2} {3}/analysis/ZeroLepton_Run2_RJigsaw.py".format( 0,0, SignalRegion, os.getenv('ZEROLEPTONFITTER')   )
-
-    cmd = "../../../HistFitter-00-00-52/scripts/HistFitter.py -t -w -f  -z -F disc -r {2} {3}/analysis/ZeroLepton_Run2_RJigsaw.py".format( 0,0, SignalRegion, os.getenv('ZEROLEPTONFITTER')   )
+    if mode == "exclusion":
+        cmd = "../../../HistFitter-00-00-52/scripts/HistFitter.py -t -w -d -f  -F bkg  -V  -r {2} {3}/analysis/ZeroLepton_Run2_RJigsaw.py".format( 0,0, SignalRegion, os.getenv('ZEROLEPTONFITTER')   )
+    elif mode == "discovery":
+        cmd = "../../../HistFitter-00-00-52/scripts/HistFitter.py -t -w -f  -z -F disc -r {2} {3}/analysis/ZeroLepton_Run2_RJigsaw.py".format( 0,0, SignalRegion, os.getenv('ZEROLEPTONFITTER')   )
 
     commands.append( (SignalRegion, SignalRegion, cmd) )
 

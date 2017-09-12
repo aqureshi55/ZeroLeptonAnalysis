@@ -74,7 +74,7 @@ SignalRegions = [
 # options                                                                                                                                                     
 nPoints = 30
 muRange = 100
-nToys = 1000
+nToys = 3000
 
 
 commands = []
@@ -92,6 +92,9 @@ for SignalRegion in SignalRegions:
         muRange = 50
     else:
         muRange = 60
+
+    if ("SRS4" in SignalRegion):
+        nToys = 3000
 
     option = "-N %d -R %d" % (nPoints, muRange)
     option += " -n %d"%(nToys)

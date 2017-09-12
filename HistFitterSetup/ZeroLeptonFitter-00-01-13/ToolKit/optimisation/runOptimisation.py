@@ -32,6 +32,7 @@ parser.add_argument("-o", "--outputdir", default=os.path.join(os.getenv('ZEROLEP
 parser.add_argument("--local", action='store_true', default=False, help="run these commands locally?")
 parser.add_argument("--dry_run", action='store_true', default=False, help="dry run?")
 parser.add_argument("--grid", default=None, type=str, help="Attempt to detect most recent optimisation file for this grid, and use it")
+parser.add_argument("--dir",default=None, type=str)
 parser.add_argument("--site", default="default", type=str, help="Site to take from settings/batch.cfg")
 parser.add_argument("-m", "--missing-filename", default=None, type=str, help="filename with cut strings to run again")
 parser.add_argument("--queue", default=None, type=str, help="Override queue name for site from settings/batch.cfg")
@@ -87,15 +88,19 @@ if not os.path.exists(args.outputdir) and not args.dry_run:
     print("Created outputdir %s" % args.outputdir)
 
 dirname = os.path.join(args.outputdir, name)
-if not args.force and os.path.exists(dirname) and not args.dry_run:
+outputname = os.path.join(args.outputdir,args.dir)
+print dirname
+print outputname
+
+if not args.force and os.path.exists(outputname) and not args.dry_run:
     print("")
-    print("The directory %s already exists! Exiting now.\n\nIf this was intended, move the directory or force using this dir (-F). We will not re-run the same optimisation file twice to prevent accidental overwriting" % dirname)
+    print("The directory %s already exists! Exiting now.\n\nIf this was intended, move the directory or force using this dir (-F). We will not re-run the same optimisation file twice to prevent accidental overwriting" % outputname)
     sys.exit()
 
-print("Will write optimisation output in %s" % dirname)
-if not os.path.exists(dirname) and not args.dry_run:
-    os.makedirs(dirname)
-    print("Created output directory %s" % dirname)
+print("Will write optimisation output in %s" % outputname)
+if not os.path.exists(outputname) and not args.dry_run:
+    os.makedirs(outputname)
+    print("Created output directory %s" % outputname)
 
 with open(args.filename) as f:
     data = json.load(f)
@@ -136,7 +141,7 @@ else:
             missingCommands.append(c)
 
         commandsToRun = missingCommands
-    runBatchCommands(args, dirname, commandsToRun, runMissing)
+    runBatchCommands(args, outputname, commandsToRun, runMissing)
 
 # Keep a copy of the optimisation used in the output dir
 copiedFilename = os.path.join(dirname, os.path.basename(args.filename))
